@@ -22,8 +22,7 @@
 </head>
 <body>
     <h2>TÌNH HÌNH TRIỂN KHAI 25 DỊCH VỤ CÔNG TRỰC TUYẾN THIẾT YẾU</h2>
-    <p><strong>Lưu ý:</strong> Vui lòng chỉ sử dụng nút "Tạo Báo Cáo" để gửi dữ liệu. Không mở trực tiếp URL trong trình duyệt.</p>
-    <form id="dataForm">
+        <form id="dataForm">
         <table>
             <thead>
                 <tr>
@@ -124,7 +123,7 @@
                 </tr>
             </tbody>
         </table>
-        <button type="button" class="submit-btn" onclick="submitData()">Tạo Báo Cáo</button>
+        <button type="button" class="submit-btn" onclick="submitData()"> Gửi Báo Cáo</button>
     </form>
 
     <div id="report">
@@ -155,10 +154,9 @@
             </tfoot>
         </table>
     </div>
-    <div id="error-message"></div>
-
+    
     <script>
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzyfpEv6FWWRP-l5JIEWALWesIAvdAg18j6hXCb3FFQFTtq7v5NWEpO5wW_dCoejVLT_A/exec';
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyeHB55CpSTIfVXfDowY2dQ2HztdvSU12HTuxxFHnePLUbTP14Qj494efSx7Tjz0gb88Q/exec';
 
 function submitData() {
     const dataArray = [];
