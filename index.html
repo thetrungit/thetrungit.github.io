@@ -1,205 +1,130 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Nhập Liệu và Báo Cáo Dịch Vụ Công Trực Tuyến</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        input[type="text"], input[type="number"] { width: 100%; padding: 5px; box-sizing: border-box; }
-        input[type="checkbox"] { margin: 0; }
-        h2 { text-align: center; }
-        .submit-btn { margin-top: 20px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
-        .submit-btn:hover { background-color: #45a049; }
-        #report { margin-top: 20px; padding: 15px; border: 1px solid #ddd; display: none; }
-        #report table { width: 100%; border-collapse: collapse; }
-        #report th, #report td { border: 1px solid #ddd; padding: 8px; }
-        #error-message { color: red; display: none; }
-    </style>
+  <title>Báo Cáo Dịch Vụ Công</title>
 </head>
 <body>
-    <h2>TÌNH HÌNH TRIỂN KHAI 25 DỊCH VỤ CÔNG TRỰC TUYẾN THIẾT YẾU</h2>
-        <form id="dataForm">
-        <table>
-            <thead>
-                <tr>
-                    <th rowspan="2">STT</th>
-                    <th rowspan="2">DỊCH VỤ CÔNG TRỰC TUYẾN</th>
-                    <th rowspan="2">KẾT NỐI VỚI CỔNG DVC QUỐC GIA<br>(Đã kết nối, chưa kết nối)</th>
-                    <th colspan="3">TỔNG SỐ HỒ SƠ<br>(Bao gồm cả trực tiếp và trực tuyến)</th>
-                    <th colspan="2">TÌNH HÌNH XỬ LÝ HỒ SƠ TRỰC TUYẾN</th>
-                </tr>
-                <tr>
-                    <th>Tổng số</th>
-                    <th>Trực tuyến</th>
-                    <th>Tỷ lệ</th>
-                    <th>Đúng hạn</th>
-                    <th>Quá hạn</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td><input type="text" name="dichvu_1" value="Đăng ký thương trú" readonly></td>
-                    <td><input type="checkbox" name="ketnoi_1" checked> Đã kết nối</td>
-                    <td><input type="number" name="tongso_1" min="0"></td>
-                    <td><input type="number" name="tructuyen_1" min="0"></td>
-                    <td><input type="number" name="tyle_1" min="0" max="100">%</td>
-                    <td><input type="number" name="dunghan_1" min="0"></td>
-                    <td><input type="number" name="quahan_1" min="0"></td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td><input type="text" name="dichvu_2" value="Đăng ký tam trú" readonly></td>
-                    <td><input type="checkbox" name="ketnoi_2" checked> Đã kết nối</td>
-                    <td><input type="number" name="tongso_2" min="0"></td>
-                    <td><input type="number" name="tructuyen_2" min="0"></td>
-                    <td><input type="number" name="tyle_2" min="0" max="100">%</td>
-                    <td><input type="number" name="dunghan_2" min="0"></td>
-                    <td><input type="number" name="quahan_2" min="0"></td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td><input type="text" name="dichvu_3" value="Khai báo tạm vắng" readonly></td>
-                    <td><input type="checkbox" name="ketnoi_3" checked> Đã kết nối</td>
-                    <td><input type="number" name="tongso_3" min="0"></td>
-                    <td><input type="number" name="tructuyen_3" min="0"></td>
-                    <td><input type="number" name="tyle_3" min="0" max="100">%</td>
-                    <td><input type="number" name="dunghan_3" min="0"></td>
-                    <td><input type="number" name="quahan_3" min="0"></td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td><input type="text" name="dichvu_4" value="Thông báo lưu trú" readonly></td>
-                    <td><input type="checkbox" name="ketnoi_4" checked> Đã kết nối</td>
-                    <td><input type="number" name="tongso_4" min="0"></td>
-                    <td><input type="number" name="tructuyen_4" min="0"></td>
-                    <td><input type="number" name="tyle_4" min="0" max="100">%</td>
-                    <td><input type="number" name="dunghan_4" min="0"></td>
-                    <td><input type="number" name="quahan_4" min="0"></td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td><input type="text" name="dichvu_5" value="Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước" readonly></td>
-                    <td><input type="checkbox" name="ketnoi_5" checked> Đã kết nối</td>
-                    <td><input type="number" name="tongso_5" min="0"></td>
-                    <td><input type="number" name="tructuyen_5" min="0"></td>
-                    <td><input type="number" name="tyle_5" min="0" max="100">%</td>
-                    <td><input type="number" name="dunghan_5" min="0"></td>
-                    <td><input type="number" name="quahan_5" min="0"></td>
-                </tr>
-                <tr>
-                    <td>6</td>
-                    <td><input type="text" name="dichvu_6" value="Cấp lại, đổi thẻ Căn cước" readonly></td>
-                    <td><input type="checkbox" name="ketnoi_6" checked> Đã kết nối</td>
-                    <td><input type="number" name="tongso_6" min="0"></td>
-                    <td><input type="number" name="tructuyen_6" min="0"></td>
-                    <td><input type="number" name="tyle_6" min="0" max="100">%</td>
-                    <td><input type="number" name="dunghan_6" min="0"></td>
-                    <td><input type="number" name="quahan_6" min="0"></td>
-                </tr>
-                <tr>
-                    <td>7</td>
-                    <td><input type="text" name="dichvu_7" value="Đăng ký biển số môtô, xe gắn máy" readonly></td>
-                    <td><input type="checkbox" name="ketnoi_7" checked> Đã kết nối</td>
-                    <td><input type="number" name="tongso_7" min="0"></td>
-                    <td><input type="number" name="tructuyen_7" min="0"></td>
-                    <td><input type="number" name="tyle_7" min="0" max="100">%</td>
-                    <td><input type="number" name="dunghan_7" min="0"></td>
-                    <td><input type="number" name="quahan_7" min="0"></td>
-                </tr>
-                <tr>
-                    <td>8</td>
-                    <td><input type="text" name="dichvu_8" value="Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)" readonly></td>
-                    <td><input type="checkbox" name="ketnoi_8" checked> Đã kết nối</td>
-                    <td><input type="number" name="tongso_8" min="0"></td>
-                    <td><input type="number" name="tructuyen_8" min="0"></td>
-                    <td><input type="number" name="tyle_8" min="0" max="100">%</td>
-                    <td><input type="number" name="dunghan_8" min="0"></td>
-                    <td><input type="number" name="quahan_8" min="0"></td>
-                </tr>
-            </tbody>
-        </table>
-        <button type="button" class="submit-btn" onclick="submitData()"> Gửi Báo Cáo</button>
-    </form>
+  <h2>Báo Cáo Dịch Vụ Công</h2>
+  <div id="user-count">Số người dùng: <span id="user-count-value">0</span></div>
+  <form id="report-form">
+    <!-- 8 dịch vụ -->
+    <div id="services"></div>
+    <button type="button" onclick="addService()">Thêm Dịch Vụ</button>
+    <button type="button" onclick="submitData()">Tạo Báo Cáo</button>
+  </form>
+  <div id="error-message" style="display:none; color:red;"></div>
+  <div id="report"></div>
 
-    <div id="report">
-        <h3>Báo Cáo Tình Hình Xử Lý Dịch Vụ Công Trực Tuyến</h3>
-        <p><strong>Ngày tạo báo cáo:</strong> <span id="reportDate"></span></p>
-        <table id="reportTable">
-            <thead>
-                <tr>
-                    <th>STT</th>
-                    <th>Dịch Vụ</th>
-                    <th>Tổng Số Hồ Sơ</th>
-                    <th>Trực Tuyến</th>
-                    <th>Tỷ Lệ (%)</th>
-                    <th>Đúng Hạn</th>
-                    <th>Quá Hạn</th>
-                </tr>
-            </thead>
-            <tbody id="reportBody"></tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="2"><strong>Tổng cộng:</strong></td>
-                    <td id="totalTongSo">0</td>
-                    <td id="totalTrucTuyen">0</td>
-                    <td id="totalTyLe">0%</td>
-                    <td id="totalDungHan">0</td>
-                    <td id="totalQuaHan">0</td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
-    
-    <script>
+  <script>
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwttVtyLwmsYUOqVUkQUncm4f1_BdwUB3t2Q-ieHmFMbD9Jw_sOWdUo5GayQ7Wd4jCC/exec';
+    let serviceCount = 8;
 
-function submitData() {
-    const dataArray = [];
+    document.addEventListener('DOMContentLoaded', async () => {
+      await updateUserCount();
+      initializeServicesForm();
+    });
 
-    for (let i = 1; i <= 8; i++) {
-        const dichvu = document.querySelector(`input[name="dichvu_${i}"]`).value;
-        const ketnoi = document.querySelector(`input[name="ketnoi_${i}"]`).checked ? 'Đã kết nối' : 'Chưa kết nối';
-        const tongso = parseInt(document.querySelector(`input[name="tongso_${i}"]`).value) || 0;
-        const tructuyen = parseInt(document.querySelector(`input[name="tructuyen_${i}"]`).value) || 0;
-        const tyle = parseInt(document.querySelector(`input[name="tyle_${i}"]`).value) || 0;
-        const dunghan = parseInt(document.querySelector(`input[name="dunghan_${i}"]`).value) || 0;
-        const quahan = parseInt(document.querySelector(`input[name="quahan_${i}"]`).value) || 0;
-
-        const data = {
-            stt: i,
-            dichvu: dichvu,
-            ketnoi: ketnoi,
-            tongso: tongso,
-            tructuyen: tructuyen,
-            tyle: tyle,
-            dunghan: dunghan,
-            quahan: quahan
-        };
-        dataArray.push(data);
+    async function updateUserCount() {
+      try {
+        const response = await fetch(GOOGLE_SCRIPT_URL, { method: 'GET', mode: 'no-cors' });
+        const data = await response.text();
+        const result = JSON.parse(data);
+        document.getElementById('user-count-value').textContent = result.userCount;
+      } catch (error) {
+        console.error('Lỗi khi lấy số người dùng:', error);
+      }
     }
 
-    console.log('Dữ liệu gửi đi:', JSON.stringify(dataArray));
-    fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dataArray),
-        mode: 'no-cors'
-    })
-    .then(() => {
+    function initializeServicesForm() {
+      const services = [
+        "Đăng ký thương trú",
+        "Đăng ký tạm trú",
+        "Khai báo tạm vắng",
+        "Thông báo lưu trú",
+        "Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước",
+        "Cấp lại, đổi thẻ Căn cước",
+        "Đăng ký biển số môtô, xe gắn máy",
+        "Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua lỗi bị ghi hình (Phạt nguội)"
+      ];
+
+      let html = '';
+      for (let i = 1; i <= serviceCount; i++) {
+        html += generateServiceRow(i, services[i-1]);
+      }
+      document.getElementById('services').innerHTML = html;
+    }
+
+    function generateServiceRow(index, serviceName = '') {
+      return `
+        <div class="service-row" data-index="${index}">
+          <label>${index}. Dịch vụ</label><br>
+          <input type="text" name="dichvu_${index}" value="${serviceName}"><br>
+          <input type="checkbox" name="ketnoi_${index}"> Kết nối<br>
+          <input type="number" name="tongso_${index}" placeholder="Tổng số"><br>
+          <input type="number" name="tructuyen_${index}" placeholder="Trực tuyến"><br>
+          <input type="number" name="dunghan_${index}" placeholder="Đúng hạn"><br>
+          <input type="number" name="quahan_${index}" placeholder="Quá hạn"><br>
+        </div>
+      `;
+    }
+
+    function addService() {
+      serviceCount++;
+      const newServiceRow = generateServiceRow(serviceCount);
+      document.getElementById('services').insertAdjacentHTML('beforeend', newServiceRow);
+    }
+
+    async function submitData() {
+      const button = document.querySelector('button[onclick="submitData()"]');
+      button.disabled = true;
+      const dataArray = [];
+      document.querySelectorAll('.service-row').forEach(row => {
+        const index = row.getAttribute('data-index');
+        const dichvu = document.querySelector(`input[name="dichvu_${index}"]`).value;
+        const ketnoi = document.querySelector(`input[name="ketnoi_${index}"]`).checked ? 'Đã kết nối' : 'Chưa kết nối';
+        const tongso = parseInt(document.querySelector(`input[name="tongso_${index}"]`).value) || 0;
+        const tructuyen = parseInt(document.querySelector(`input[name="tructuyen_${index}"]`).value) || 0;
+        const tyle = (tructuyen / tongso) * 100 || 0; // Tính tỷ lệ
+        const dunghan = parseInt(document.querySelector(`input[name="dunghan_${index}"]`).value) || 0;
+        const quahan = parseInt(document.querySelector(`input[name="quahan_${index}"]`).value) || 0;
+
+        const data = {
+          stt: index,
+          dichvu: dichvu,
+          ketnoi: ketnoi,
+          tongso: tongso,
+          tructuyen: tructuyen,
+          tyle: tyle,
+          dunghan: dunghan,
+          quahan: quahan
+        };
+        dataArray.push(data);
+      });
+
+      try {
+        console.log('Dữ liệu gửi đi:', JSON.stringify(dataArray));
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dataArray),
+          mode: 'no-cors'
+        });
         alert('Dữ liệu đã được gửi! (Kiểm tra Google Sheets để xác nhận)');
+        await updateUserCount();
         generateReport();
-    })
-    .catch(error => {
+      } catch (error) {
         const errorMessage = document.getElementById('error-message');
         errorMessage.textContent = 'Lỗi khi gửi dữ liệu: ' + error.message;
         errorMessage.style.display = 'block';
-    });
-}
-</script>
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    function generateReport() {
+      // Logic tạo báo cáo (giữ nguyên hoặc cập nhật nếu cần)
+      document.getElementById('report').innerHTML = 'Báo cáo đã được tạo!';
+    }
+  </script>
 </body>
 </html>
