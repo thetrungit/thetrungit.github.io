@@ -87,10 +87,15 @@
       margin-top: 10px;
     }
     #report {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 18px;
-      color: #27ae60;
+      max-width: 1200px;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    #report-table th {
+      background-color: #27ae60;
     }
     @media (max-width: 768px) {
       table, th, td {
@@ -130,6 +135,7 @@
           <th>Kết Nối</th>
           <th>Tổng Số</th>
           <th>Trực Tuyến</th>
+          <th>Tỷ Lệ (%)</th>
           <th>Đúng Hạn</th>
           <th>Quá Hạn</th>
         </tr>
@@ -139,7 +145,24 @@
     <button type="button" onclick="submitData()">Tạo Báo Cáo</button>
   </form>
   <div id="error-message" style="display:none;"></div>
-  <div id="report"></div>
+  <div id="report">
+    <h3>Báo Cáo Dữ Liệu</h3>
+    <table id="report-table">
+      <thead>
+        <tr>
+          <th>STT</th>
+          <th>Dịch Vụ</th>
+          <th>Kết Nối</th>
+          <th>Tổng Số</th>
+          <th>Trực Tuyến</th>
+          <th>Tỷ Lệ (%)</th>
+          <th>Đúng Hạn</th>
+          <th>Quá Hạn</th>
+        </tr>
+      </thead>
+      <tbody id="report-body"></tbody>
+    </table>
+  </div>
 
   <script>
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwttVtyLwmsYUOqVUkQUncm4f1_BdwUB3t2Q-ieHmFMbD9Jw_sOWdUo5GayQ7Wd4jCC/exec';
@@ -178,14 +201,23 @@
           <td data-label="STT">${i}</td>
           <td data-label="Dịch Vụ"><input type="text" name="dichvu_${i}" value="${services[i-1]}" readonly></td>
           <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_${i}" checked></td>
-          <td data-label="Tổng Số"><input type="number" name="tongso_${i}" placeholder="Tổng số"></td>
-          <td data-label="Trực Tuyến"><input type="number" name="tructuyen_${i}" placeholder="Trực tuyến"></td>
+          <td data-label="Tổng Số"><input type="number" name="tongso_${i}" placeholder="Tổng số" oninput="calculateTyLe(${i})"></td>
+          <td data-label="Trực Tuyến"><input type="number" name="tructuyen_${i}" placeholder="Trực tuyến" oninput="calculateTyLe(${i})"></td>
+          <td data-label="Tỷ Lệ (%)"><span id="tyle_${i}">0.00</span></td>
           <td data-label="Đúng Hạn"><input type="number" name="dunghan_${i}" placeholder="Đúng hạn"></td>
           <td data-label="Quá Hạn"><input type="number" name="quahan_${i}" placeholder="Quá hạn"></td>
         </tr>
       `;
     }
     document.getElementById('services').innerHTML = html;
+
+    // Hàm tính tỷ lệ (%) trên client-side
+    function calculateTyLe(index) {
+      const tongso = parseInt(document.querySelector(`input[name="tongso_${index}"]`).value) || 0;
+      const tructuyen = parseInt(document.querySelector(`input[name="tructuyen_${index}"]`).value) || 0;
+      const tyle = tongso > 0 ? ((tructuyen / tongso) * 100).toFixed(2) : 0;
+      document.getElementById(`tyle_${index}`).textContent = tyle;
+    }
 
     function submitData() {
       const button = document.querySelector('button');
@@ -196,7 +228,7 @@
         const ketnoi = document.querySelector(`input[name="ketnoi_${i}"]`).checked ? 'Đã kết nối' : 'Chưa kết nối';
         const tongso = parseInt(document.querySelector(`input[name="tongso_${i}"]`).value) || 0;
         const tructuyen = parseInt(document.querySelector(`input[name="tructuyen_${i}"]`).value) || 0;
-        const tyle = 0; // Tự động tính ở server
+        const tyle = parseFloat(document.getElementById(`tyle_${i}`).textContent) || 0;
         const dunghan = parseInt(document.querySelector(`input[name="dunghan_${i}"]`).value) || 0;
         const quahan = parseInt(document.querySelector(`input[name="quahan_${i}"]`).value) || 0;
 
@@ -213,6 +245,11 @@
         dataArray.push(data);
       }
       console.log('Dữ liệu gửi đi:', JSON.stringify(dataArray));
+
+      // Hiển thị báo cáo trên giao diện
+      generateReport(dataArray);
+
+      // Gửi dữ liệu lên Google Sheets
       fetch(GOOGLE_SCRIPT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -221,7 +258,6 @@
       })
       .then(() => {
         alert('Dữ liệu đã được gửi! (Kiểm tra Google Sheets để xác nhận)');
-        generateReport();
         fetch(GOOGLE_SCRIPT_URL, {
           method: 'GET',
           mode: 'no-cors'
@@ -245,8 +281,23 @@
       });
     }
 
-    function generateReport() {
-      document.getElementById('report').innerHTML = 'Báo cáo đã được tạo!';
+    function generateReport(dataArray) {
+      let html = '';
+      dataArray.forEach(row => {
+        html += `
+          <tr>
+            <td>${row.stt}</td>
+            <td>${row.dichvu}</td>
+            <td>${row.ketnoi}</td>
+            <td>${row.tongso}</td>
+            <td>${row.tructuyen}</td>
+            <td>${row.tyle}</td>
+            <td>${row.dunghan}</td>
+            <td>${row.quahan}</td>
+          </tr>
+        `;
+      });
+      document.getElementById('report-body').innerHTML = html;
     }
   </script>
 </body>
