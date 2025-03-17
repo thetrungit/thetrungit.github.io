@@ -9,7 +9,6 @@
   <form id="report-form">
     <!-- 8 dịch vụ -->
     <div id="services"></div>
-    <button type="button" onclick="addService()">Thêm Dịch Vụ</button>
     <button type="button" onclick="submitData()">Tạo Báo Cáo</button>
   </form>
   <div id="error-message" style="display:none; color:red;"></div>
@@ -17,79 +16,61 @@
 
   <script>
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwttVtyLwmsYUOqVUkQUncm4f1_BdwUB3t2Q-ieHmFMbD9Jw_sOWdUo5GayQ7Wd4jCC/exec';
-    let serviceCount = 8;
 
-    document.addEventListener('DOMContentLoaded', async () => {
-      await updateUserCount();
-      initializeServicesForm();
-    });
+    // Hiển thị số người dùng
+    fetch(GOOGLE_SCRIPT_URL, {
+      method: 'GET',
+      mode: 'no-cors'
+    })
+    .then(response => response.text())
+    .then(data => {
+      const result = JSON.parse(data);
+      document.getElementById('user-count-value').textContent = result.userCount;
+    })
+    .catch(error => console.error('Lỗi khi lấy số người dùng:', error));
 
-    async function updateUserCount() {
-      try {
-        const response = await fetch(GOOGLE_SCRIPT_URL, { method: 'GET', mode: 'no-cors' });
-        const data = await response.text();
-        const result = JSON.parse(data);
-        document.getElementById('user-count-value').textContent = result.userCount;
-      } catch (error) {
-        console.error('Lỗi khi lấy số người dùng:', error);
-      }
-    }
-
-    function initializeServicesForm() {
-      const services = [
-        "Đăng ký thương trú",
-        "Đăng ký tạm trú",
-        "Khai báo tạm vắng",
-        "Thông báo lưu trú",
-        "Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước",
-        "Cấp lại, đổi thẻ Căn cước",
-        "Đăng ký biển số môtô, xe gắn máy",
-        "Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua lỗi bị ghi hình (Phạt nguội)"
-      ];
-
-      let html = '';
-      for (let i = 1; i <= serviceCount; i++) {
-        html += generateServiceRow(i, services[i-1]);
-      }
-      document.getElementById('services').innerHTML = html;
-    }
-
-    function generateServiceRow(index, serviceName = '') {
-      return `
-        <div class="service-row" data-index="${index}">
-          <label>${index}. Dịch vụ</label><br>
-          <input type="text" name="dichvu_${index}" value="${serviceName}"><br>
-          <input type="checkbox" name="ketnoi_${index}"> Kết nối<br>
-          <input type="number" name="tongso_${index}" placeholder="Tổng số"><br>
-          <input type="number" name="tructuyen_${index}" placeholder="Trực tuyến"><br>
-          <input type="number" name="dunghan_${index}" placeholder="Đúng hạn"><br>
-          <input type="number" name="quahan_${index}" placeholder="Quá hạn"><br>
+    // Tạo form cho 8 dịch vụ
+    const services = [
+      "Đăng ký thương trú",
+      "Đăng ký tam trú",
+      "Khai báo tạm vắng",
+      "Thông báo lưu trú",
+      "Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước",
+      "Cấp lại, đổi thẻ Căn cước",
+      "Đăng ký biển số môtô, xe gắn máy",
+      "Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)"
+    ];
+    let html = '';
+    for (let i = 1; i <= 8; i++) {
+      html += `
+        <div>
+          <label>${i}. ${services[i-1]}</label><br>
+          <input type="text" name="dichvu_${i}" value="${services[i-1]}"><br>
+          <input type="checkbox" name="ketnoi_${i}"> Kết nối<br>
+          <input type="number" name="tongso_${i}" placeholder="Tổng số"><br>
+          <input type="number" name="tructuyen_${i}" placeholder="Trực tuyến"><br>
+          <input type="number" name="dunghan_${i}" placeholder="Đúng hạn"><br>
+          <input type="number" name="quahan_${i}" placeholder="Quá hạn"><br>
         </div>
       `;
     }
+    document.getElementById('services').innerHTML = html;
 
-    function addService() {
-      serviceCount++;
-      const newServiceRow = generateServiceRow(serviceCount);
-      document.getElementById('services').insertAdjacentHTML('beforeend', newServiceRow);
-    }
-
-    async function submitData() {
-      const button = document.querySelector('button[onclick="submitData()"]');
+    function submitData() {
+      const button = document.querySelector('button');
       button.disabled = true;
       const dataArray = [];
-      document.querySelectorAll('.service-row').forEach(row => {
-        const index = row.getAttribute('data-index');
-        const dichvu = document.querySelector(`input[name="dichvu_${index}"]`).value;
-        const ketnoi = document.querySelector(`input[name="ketnoi_${index}"]`).checked ? 'Đã kết nối' : 'Chưa kết nối';
-        const tongso = parseInt(document.querySelector(`input[name="tongso_${index}"]`).value) || 0;
-        const tructuyen = parseInt(document.querySelector(`input[name="tructuyen_${index}"]`).value) || 0;
-        const tyle = (tructuyen / tongso) * 100 || 0; // Tính tỷ lệ
-        const dunghan = parseInt(document.querySelector(`input[name="dunghan_${index}"]`).value) || 0;
-        const quahan = parseInt(document.querySelector(`input[name="quahan_${index}"]`).value) || 0;
+      for (let i = 1; i <= 8; i++) {
+        const dichvu = document.querySelector(`input[name="dichvu_${i}"]`).value;
+        const ketnoi = document.querySelector(`input[name="ketnoi_${i}"]`).checked ? 'Đã kết nối' : 'Chưa kết nối';
+        const tongso = parseInt(document.querySelector(`input[name="tongso_${i}"]`).value) || 0;
+        const tructuyen = parseInt(document.querySelector(`input[name="tructuyen_${i}"]`).value) || 0;
+        const tyle = 0; // Tự động tính ở server
+        const dunghan = parseInt(document.querySelector(`input[name="dunghan_${i}"]`).value) || 0;
+        const quahan = parseInt(document.querySelector(`input[name="quahan_${i}"]`).value) || 0;
 
         const data = {
-          stt: index,
+          stt: i,
           dichvu: dichvu,
           ketnoi: ketnoi,
           tongso: tongso,
@@ -99,26 +80,34 @@
           quahan: quahan
         };
         dataArray.push(data);
-      });
-
-      try {
-        console.log('Dữ liệu gửi đi:', JSON.stringify(dataArray));
-        await fetch(GOOGLE_SCRIPT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(dataArray),
-          mode: 'no-cors'
-        });
+      }
+      console.log('Dữ liệu gửi đi:', JSON.stringify(dataArray));
+      fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dataArray),
+        mode: 'no-cors'
+      })
+      .then(() => {
         alert('Dữ liệu đã được gửi! (Kiểm tra Google Sheets để xác nhận)');
-        await updateUserCount();
         generateReport();
-      } catch (error) {
+        fetch(GOOGLE_SCRIPT_URL, {
+          method: 'GET',
+          mode: 'no-cors'
+        })
+        .then(response => response.text())
+        .then(data => {
+          const result = JSON.parse(data);
+          document.getElementById('user-count-value').textContent = result.userCount;
+        });
+        button.disabled = false;
+      })
+      .catch(error => {
         const errorMessage = document.getElementById('error-message');
         errorMessage.textContent = 'Lỗi khi gửi dữ liệu: ' + error.message;
         errorMessage.style.display = 'block';
-      } finally {
         button.disabled = false;
-      }
+      });
     }
 
     function generateReport() {
