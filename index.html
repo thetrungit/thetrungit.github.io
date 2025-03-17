@@ -1,35 +1,166 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Báo Cáo Dịch Vụ Công</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    #user-count {
+      text-align: center;
+      font-size: 18px;
+      color: #555;
+      margin-bottom: 20px;
+    }
+    #user-count-value {
+      font-weight: bold;
+      color: #2c3e50;
+    }
+    #report-form {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #2c3e50;
+      color: #fff;
+    }
+    td {
+      background-color: #fafafa;
+    }
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    input[type="checkbox"] {
+      margin-right: 5px;
+    }
+    button {
+      display: block;
+      width: 200px;
+      margin: 20px auto;
+      padding: 10px;
+      background-color: #2c3e50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #34495e;
+    }
+    button:disabled {
+      background-color: #95a5a6;
+      cursor: not-allowed;
+    }
+    #error-message {
+      text-align: center;
+      color: red;
+      margin-top: 10px;
+    }
+    #report {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 18px;
+      color: #27ae60;
+    }
+    @media (max-width: 768px) {
+      table, th, td {
+        display: block;
+        width: 100%;
+      }
+      th {
+        display: none;
+      }
+      td {
+        padding: 10px;
+        border: none;
+        border-bottom: 1px solid #ddd;
+        position: relative;
+        padding-left: 50%;
+      }
+      td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        width: 45%;
+        font-weight: bold;
+        color: #333;
+      }
+    }
+  </style>
 </head>
 <body>
   <h2>Báo Cáo Dịch Vụ Công</h2>
   <div id="user-count">Số người dùng: <span id="user-count-value">0</span></div>
   <form id="report-form">
-    <!-- 8 dịch vụ -->
-    <div id="services"></div>
+    <table>
+      <thead>
+        <tr>
+          <th>STT</th>
+          <th>Dịch Vụ</th>
+          <th>Kết Nối</th>
+          <th>Tổng Số</th>
+          <th>Trực Tuyến</th>
+          <th>Đúng Hạn</th>
+          <th>Quá Hạn</th>
+        </tr>
+      </thead>
+      <tbody id="services"></tbody>
+    </table>
     <button type="button" onclick="submitData()">Tạo Báo Cáo</button>
   </form>
-  <div id="error-message" style="display:none; color:red;"></div>
+  <div id="error-message" style="display:none;"></div>
   <div id="report"></div>
 
   <script>
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwttVtyLwmsYUOqVUkQUncm4f1_BdwUB3t2Q-ieHmFMbD9Jw_sOWdUo5GayQ7Wd4jCC/exec';
 
-    // Hiển thị số người dùng
+    // Lấy số người dùng khi tải trang
     fetch(GOOGLE_SCRIPT_URL, {
       method: 'GET',
       mode: 'no-cors'
     })
     .then(response => response.text())
     .then(data => {
-      const result = JSON.parse(data);
-      document.getElementById('user-count-value').textContent = result.userCount;
+      try {
+        const result = JSON.parse(data);
+        document.getElementById('user-count-value').textContent = result.userCount;
+      } catch (e) {
+        console.error('Lỗi parse JSON:', e);
+      }
     })
     .catch(error => console.error('Lỗi khi lấy số người dùng:', error));
 
-    // Tạo form cho 8 dịch vụ
+    // Tạo bảng cho 8 dịch vụ
     const services = [
       "Đăng ký thương trú",
       "Đăng ký tam trú",
@@ -43,15 +174,15 @@
     let html = '';
     for (let i = 1; i <= 8; i++) {
       html += `
-        <div>
-          <label>${i}. ${services[i-1]}</label><br>
-          <input type="text" name="dichvu_${i}" value="${services[i-1]}"><br>
-          <input type="checkbox" name="ketnoi_${i}"> Kết nối<br>
-          <input type="number" name="tongso_${i}" placeholder="Tổng số"><br>
-          <input type="number" name="tructuyen_${i}" placeholder="Trực tuyến"><br>
-          <input type="number" name="dunghan_${i}" placeholder="Đúng hạn"><br>
-          <input type="number" name="quahan_${i}" placeholder="Quá hạn"><br>
-        </div>
+        <tr>
+          <td data-label="STT">${i}</td>
+          <td data-label="Dịch Vụ"><input type="text" name="dichvu_${i}" value="${services[i-1]}" readonly></td>
+          <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_${i}" checked></td>
+          <td data-label="Tổng Số"><input type="number" name="tongso_${i}" placeholder="Tổng số"></td>
+          <td data-label="Trực Tuyến"><input type="number" name="tructuyen_${i}" placeholder="Trực tuyến"></td>
+          <td data-label="Đúng Hạn"><input type="number" name="dunghan_${i}" placeholder="Đúng hạn"></td>
+          <td data-label="Quá Hạn"><input type="number" name="quahan_${i}" placeholder="Quá hạn"></td>
+        </tr>
       `;
     }
     document.getElementById('services').innerHTML = html;
@@ -97,8 +228,12 @@
         })
         .then(response => response.text())
         .then(data => {
-          const result = JSON.parse(data);
-          document.getElementById('user-count-value').textContent = result.userCount;
+          try {
+            const result = JSON.parse(data);
+            document.getElementById('user-count-value').textContent = result.userCount;
+          } catch (e) {
+            console.error('Lỗi parse JSON:', e);
+          }
         });
         button.disabled = false;
       })
@@ -111,7 +246,6 @@
     }
 
     function generateReport() {
-      // Logic tạo báo cáo (giữ nguyên hoặc cập nhật nếu cần)
       document.getElementById('report').innerHTML = 'Báo cáo đã được tạo!';
     }
   </script>
