@@ -142,7 +142,7 @@
       </thead>
       <tbody id="services"></tbody>
     </table>
-    <button type="button" onclick="submitData()">Gửi Báo Cáo</button>
+    <button type="button" onclick="submitData()">Tạo Báo Cáo</button>
   </form>
   <div id="error-message" style="display:none;"></div>
   <div id="report">
@@ -231,6 +231,9 @@
         const tyle = parseFloat(document.getElementById(`tyle_${i}`).textContent) || 0;
         const dunghan = parseInt(document.querySelector(`input[name="dunghan_${i}"]`).value) || 0;
         const quahan = parseInt(document.querySelector(`input[name="quahan_${i}"]`).value) || 0;
+
+        // Debug giá trị quahan
+        console.log(`Dòng ${i}: quahan = ${quahan}`);
 
         const data = {
           stt: i,
