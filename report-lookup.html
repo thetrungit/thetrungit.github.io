@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tra cứu báo cáo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #2c3e50;
+      color: #fff;
+    }
+    td {
+      background-color: #fafafa;
+    }
+    button {
+      padding: 8px 16px;
+      background-color: #2c3e50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #34495e;
+    }
+    #error-message {
+      text-align: center;
+      color: red;
+      margin-top: 10px;
+    }
+    @media (max-width: 768px) {
+      table, th, td {
+        display: block;
+        width: 100%;
+      }
+      th {
+        display: none;
+      }
+      td {
+        padding: 10px;
+        border: none;
+        border-bottom: 1px solid #ddd;
+        position: relative;
+        padding-left: 50%;
+      }
+      td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        width: 45%;
+        font-weight: bold;
+        color: #333;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Tra cứu báo cáo</h2>
+    <h3>Danh sách người gửi báo cáo</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Tên cán bộ</th>
+          <th>Tên đơn vị</th>
+          <th>Thời gian gửi</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody id="userList"></tbody>
+    </table>
+    <h3>Chi tiết báo cáo</h3>
+    <table id="reportDetailsTable" style="display:none;">
+      <thead>
+        <tr>
+          <th>STT</th>
+          <th>Dịch Vụ</th>
+          <th>Kết Nối</th>
+          <th>Tổng Số</th>
+          <th>Trực Tuyến</th>
+          <th>Tỷ Lệ (%)</th>
+          <th>Đúng Hạn</th>
+          <th>Quá Hạn</th>
+        </tr>
+      </thead>
+      <tbody id="reportDetails"></tbody>
+    </table>
+    <div id="error-message" style="display:none;"></div>
+  </div>
+
+  <script>
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzXQ8vEXKbopLLrnEcFvk5AYxQptnRFZB8w7dMprdNVU7BZv0u4b_QNJsaUf7-l2ZuH/exec';
+
+    // Hàm lấy danh sách user
+    function loadUsers() {
+      fetch(`${GOOGLE_SCRIPT_URL}?action=listUsers`)
+        .then(response => response.json())
+        .then(data => {
+          const userList = document.getElementById('userList');
+          userList.innerHTML = '';
+          data.forEach(user => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td data-label="Tên cán bộ">${user.tenCanBo}</td>
+              <td data-label="Tên đơn vị">${user.tenDonVi}</td>
+              <td data-label="Thời gian gửi">${user.thoiGianGui}</td>
+              <td data-label="Thao tác"><button onclick="loadReportDetails('${user.reportId}')">Xem chi tiết</button></td>
+            `;
+            userList.appendChild(row);
+          });
+        })
+        .catch(error => {
+          const errorMessage = document.getElementById('error-message');
+          errorMessage.textContent = 'Lỗi khi lấy dữ liệu: ' + error.message;
+          errorMessage.style.display = 'block';
+        });
+    }
+
+    // Hàm lấy chi tiết báo cáo dựa trên reportId
+    function loadReportDetails(reportId) {
+      fetch(`${GOOGLE_SCRIPT_URL}?action=getReportDetails&reportId=${reportId}`)
+        .then(response => response.json())
+        .then(data => {
+          const reportDetailsTable = document.getElementById('reportDetailsTable');
+          const reportDetails = document.getElementById('reportDetails');
+          reportDetails.innerHTML = '';
+          if (data.length === 0) {
+            reportDetailsTable.style.display = 'none';
+            alert('Không tìm thấy dữ liệu báo cáo cho ID này');
+            return;
+          }
+          data.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td data-label="STT">${row.stt}</td>
+              <td data-label="Dịch Vụ">${row.dichVu}</td>
+              <td data-label="Kết Nối">${row.ketNoi}</td>
+              <td data-label="Tổng Số">${row.tongSo}</td>
+              <td data-label="Trực Tuyến">${row.trucTuyen}</td>
+              <td data-label="Tỷ Lệ (%)">${row.tyLe}</td>
+              <td data-label="Đúng Hạn">${row.dungHan}</td>
+              <td data-label="Quá Hạn">${row.quaHan}</td>
+            `;
+            reportDetails.appendChild(tr);
+          });
+          reportDetailsTable.style.display = 'table';
+        })
+        .catch(error => {
+          const errorMessage = document.getElementById('error-message');
+          errorMessage.textContent = 'Lỗi khi lấy dữ liệu: ' + error.message;
+          errorMessage.style.display = 'block';
+        });
+    }
+
+    // Tải danh sách user khi trang được tải
+    window.onload = loadUsers;
+  </script>
+</body>
+</html>
