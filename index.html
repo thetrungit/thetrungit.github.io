@@ -1,118 +1,460 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gửi Dữ Liệu POST</title>
-    <style>
-        .data-row {
-            margin-bottom: 10px;
-        }
-        .data-row label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .data-row input {
-            width: 100%;
-            padding: 5px;
-            margin-bottom: 5px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Báo Cáo Dịch Vụ Công</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    #report-form {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #2c3e50;
+      color: #fff;
+    }
+    td {
+      background-color: #fafafa;
+    }
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    input[type="checkbox"] {
+      margin-right: 5px;
+    }
+    select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #2c3e50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-right: 10px;
+    }
+    button:hover {
+      background-color: #34495e;
+    }
+    button:disabled {
+      background-color: #95a5a6;
+      cursor: not-allowed;
+    }
+    #error-message {
+      text-align: center;
+      color: red;
+      margin-top: 10px;
+    }
+    #report {
+      max-width: 1200px;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    #report-table th {
+      background-color: #27ae60;
+    }
+    @media (max-width: 768px) {
+      table, th, td {
+        display: block;
+        width: 100%;
+      }
+      th {
+        display: none;
+      }
+      td {
+        padding: 10px;
+        border: none;
+        border-bottom: 1px solid #ddd;
+        position: relative;
+        padding-left: 50%;
+      }
+      td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        width: 45%;
+        font-weight: bold;
+        color: #333;
+      }
+    }
+  </style>
 </head>
 <body>
-    <h1>Form Gửi Dữ Liệu POST</h1>
-    <form id="dataForm">
-        <label for="user">User:</label>
-        <input type="text" id="user" name="user" required><br>
-        <div class="data-row">
-            <label for="stt">STT:</label>
-            <input type="number" id="stt" name="stt" required>
+  <h2>Báo Cáo Dịch Vụ Công</h2>
+  <form id="report-form">
+    <table>
+      <thead>
+        <tr>
+          <th>STT</th>
+          <th>Dịch Vụ</th>
+          <th>Kết Nối</th>
+          <th>Tổng Số</th>
+          <th>Trực Tuyến</th>
+          <th>Tỷ Lệ (%)</th>
+          <th>Đúng Hạn</th>
+          <th>Quá Hạn</th>
+        </tr>
+      </thead>
+      <tbody id="services">
+        <tr>
+          <td data-label="STT"></td>
+          <td data-label="Tên cán bộ" colspan="3"><input type="text" id="tenCanBo" name="tenCanBo" required placeholder="Nhập tên cán bộ"></td>
+          <td data-label="Tên đơn vị" colspan="4"><input type="text" id="tenDonVi" name="tenDonVi" required placeholder="Nhập tên đơn vị"></td>
+        </tr>
+        <tr>
+          <td data-label="STT">1</td>
+          <td data-label="Dịch Vụ"><select name="dichvu_1">
+            <option value="Đăng ký thương trú" selected>Đăng ký thương trú</option>
+            <option value="Đăng ký tam trú">Đăng ký tam trú</option>
+            <option value="Khai báo tạm vắng">Khai báo tạm vắng</option>
+            <option value="Thông báo lưu trú">Thông báo lưu trú</option>
+            <option value="Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước">Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước</option>
+            <option value="Cấp lại, đổi thẻ Căn cước">Cấp lại, đổi thẻ Căn cước</option>
+            <option value="Đăng ký biển số môtô, xe gắn máy">Đăng ký biển số môtô, xe gắn máy</option>
+            <option value="Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)">Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)</option>
+          </select></td>
+          <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_1" checked></td>
+          <td data-label="Tổng Số"><input type="number" name="tongso_1" placeholder="Tổng số" oninput="calculateTyLe(1)"></td>
+          <td data-label="Trực Tuyến"><input type="number" name="tructuyen_1" placeholder="Trực tuyến" oninput="calculateTyLe(1)"></td>
+          <td data-label="Tỷ Lệ (%)"><span id="tyle_1">0.00</span></td>
+          <td data-label="Đúng Hạn"><input type="number" name="dunghan_1" placeholder="Đúng hạn"></td>
+          <td data-label="Quá Hạn"><input type="number" name="quahan_1" placeholder="Quá hạn"></td>
+        </tr>
+        <tr>
+          <td data-label="STT">2</td>
+          <td data-label="Dịch Vụ"><select name="dichvu_2">
+            <option value="Đăng ký thương trú">Đăng ký thương trú</option>
+            <option value="Đăng ký tam trú" selected>Đăng ký tam trú</option>
+            <option value="Khai báo tạm vắng">Khai báo tạm vắng</option>
+            <option value="Thông báo lưu trú">Thông báo lưu trú</option>
+            <option value="Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước">Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước</option>
+            <option value="Cấp lại, đổi thẻ Căn cước">Cấp lại, đổi thẻ Căn cước</option>
+            <option value="Đăng ký biển số môtô, xe gắn máy">Đăng ký biển số môtô, xe gắn máy</option>
+            <option value="Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)">Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)</option>
+          </select></td>
+          <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_2" checked></td>
+          <td data-label="Tổng Số"><input type="number" name="tongso_2" placeholder="Tổng số" oninput="calculateTyLe(2)"></td>
+          <td data-label="Trực Tuyến"><input type="number" name="tructuyen_2" placeholder="Trực tuyến" oninput="calculateTyLe(2)"></td>
+          <td data-label="Tỷ Lệ (%)"><span id="tyle_2">0.00</span></td>
+          <td data-label="Đúng Hạn"><input type="number" name="dunghan_2" placeholder="Đúng hạn"></td>
+          <td data-label="Quá Hạn"><input type="number" name="quahan_2" placeholder="Quá hạn"></td>
+        </tr>
+        <tr>
+          <td data-label="STT">3</td>
+          <td data-label="Dịch Vụ"><select name="dichvu_3">
+            <option value="Đăng ký thương trú">Đăng ký thương trú</option>
+            <option value="Đăng ký tam trú">Đăng ký tam trú</option>
+            <option value="Khai báo tạm vắng" selected>Khai báo tạm vắng</option>
+            <option value="Thông báo lưu trú">Thông báo lưu trú</option>
+            <option value="Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước">Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước</option>
+            <option value="Cấp lại, đổi thẻ Căn cước">Cấp lại, đổi thẻ Căn cước</option>
+            <option value="Đăng ký biển số môtô, xe gắn máy">Đăng ký biển số môtô, xe gắn máy</option>
+            <option value="Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)">Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)</option>
+          </select></td>
+          <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_3" checked></td>
+          <td data-label="Tổng Số"><input type="number" name="tongso_3" placeholder="Tổng số" oninput="calculateTyLe(3)"></td>
+          <td data-label="Trực Tuyến"><input type="number" name="tructuyen_3" placeholder="Trực tuyến" oninput="calculateTyLe(3)"></td>
+          <td data-label="Tỷ Lệ (%)"><span id="tyle_3">0.00</span></td>
+          <td data-label="Đúng Hạn"><input type="number" name="dunghan_3" placeholder="Đúng hạn"></td>
+          <td data-label="Quá Hạn"><input type="number" name="quahan_3" placeholder="Quá hạn"></td>
+        </tr>
+        <tr>
+          <td data-label="STT">4</td>
+          <td data-label="Dịch Vụ"><select name="dichvu_4">
+            <option value="Đăng ký thương trú">Đăng ký thương trú</option>
+            <option value="Đăng ký tam trú">Đăng ký tam trú</option>
+            <option value="Khai báo tạm vắng">Khai báo tạm vắng</option>
+            <option value="Thông báo lưu trú" selected>Thông báo lưu trú</option>
+            <option value="Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước">Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước</option>
+            <option value="Cấp lại, đổi thẻ Căn cước">Cấp lại, đổi thẻ Căn cước</option>
+            <option value="Đăng ký biển số môtô, xe gắn máy">Đăng ký biển số môtô, xe gắn máy</option>
+            <option value="Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)">Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)</option>
+          </select></td>
+          <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_4" checked></td>
+          <td data-label="Tổng Số"><input type="number" name="tongso_4" placeholder="Tổng số" oninput="calculateTyLe(4)"></td>
+          <td data-label="Trực Tuyến"><input type="number" name="tructuyen_4" placeholder="Trực tuyến" oninput="calculateTyLe(4)"></td>
+          <td data-label="Tỷ Lệ (%)"><span id="tyle_4">0.00</span></td>
+          <td data-label="Đúng Hạn"><input type="number" name="dunghan_4" placeholder="Đúng hạn"></td>
+          <td data-label="Quá Hạn"><input type="number" name="quahan_4" placeholder="Quá hạn"></td>
+        </tr>
+        <tr>
+          <td data-label="STT">5</td>
+          <td data-label="Dịch Vụ"><select name="dichvu_5">
+            <option value="Đăng ký thương trú">Đăng ký thương trú</option>
+            <option value="Đăng ký tam trú">Đăng ký tam trú</option>
+            <option value="Khai báo tạm vắng">Khai báo tạm vắng</option>
+            <option value="Thông báo lưu trú">Thông báo lưu trú</option>
+            <option value="Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước" selected>Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước</option>
+            <option value="Cấp lại, đổi thẻ Căn cước">Cấp lại, đổi thẻ Căn cước</option>
+            <option value="Đăng ký biển số môtô, xe gắn máy">Đăng ký biển số môtô, xe gắn máy</option>
+            <option value="Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)">Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)</option>
+          </select></td>
+          <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_5" checked></td>
+          <td data-label="Tổng Số"><input type="number" name="tongso_5" placeholder="Tổng số" oninput="calculateTyLe(5)"></td>
+          <td data-label="Trực Tuyến"><input type="number" name="tructuyen_5" placeholder="Trực tuyến" oninput="calculateTyLe(5)"></td>
+          <td data-label="Tỷ Lệ (%)"><span id="tyle_5">0.00</span></td>
+          <td data-label="Đúng Hạn"><input type="number" name="dunghan_5" placeholder="Đúng hạn"></td>
+          <td data-label="Quá Hạn"><input type="number" name="quahan_5" placeholder="Quá hạn"></td>
+        </tr>
+        <tr>
+          <td data-label="STT">6</td>
+          <td data-label="Dịch Vụ"><select name="dichvu_6">
+            <option value="Đăng ký thương trú">Đăng ký thương trú</option>
+            <option value="Đăng ký tam trú">Đăng ký tam trú</option>
+            <option value="Khai báo tạm vắng">Khai báo tạm vắng</option>
+            <option value="Thông báo lưu trú">Thông báo lưu trú</option>
+            <option value="Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước">Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước</option>
+            <option value="Cấp lại, đổi thẻ Căn cước" selected>Cấp lại, đổi thẻ Căn cước</option>
+            <option value="Đăng ký biển số môtô, xe gắn máy">Đăng ký biển số môtô, xe gắn máy</option>
+            <option value="Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)">Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)</option>
+          </select></td>
+          <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_6" checked></td>
+          <td data-label="Tổng Số"><input type="number" name="tongso_6" placeholder="Tổng số" oninput="calculateTyLe(6)"></td>
+          <td data-label="Trực Tuyến"><input type="number" name="tructuyen_6" placeholder="Trực tuyến" oninput="calculateTyLe(6)"></td>
+          <td data-label="Tỷ Lệ (%)"><span id="tyle_6">0.00</span></td>
+          <td data-label="Đúng Hạn"><input type="number" name="dunghan_6" placeholder="Đúng hạn"></td>
+          <td data-label="Quá Hạn"><input type="number" name="quahan_6" placeholder="Quá hạn"></td>
+        </tr>
+        <tr>
+          <td data-label="STT">7</td>
+          <td data-label="Dịch Vụ"><select name="dichvu_7">
+            <option value="Đăng ký thương trú">Đăng ký thương trú</option>
+            <option value="Đăng ký tam trú">Đăng ký tam trú</option>
+            <option value="Khai báo tạm vắng">Khai báo tạm vắng</option>
+            <option value="Thông báo lưu trú">Thông báo lưu trú</option>
+            <option value="Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước">Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước</option>
+            <option value="Cấp lại, đổi thẻ Căn cước">Cấp lại, đổi thẻ Căn cước</option>
+            <option value="Đăng ký biển số môtô, xe gắn máy" selected>Đăng ký biển số môtô, xe gắn máy</option>
+            <option value="Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)">Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)</option>
+          </select></td>
+          <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_7" checked></td>
+          <td data-label="Tổng Số"><input type="number" name="tongso_7" placeholder="Tổng số" oninput="calculateTyLe(7)"></td>
+          <td data-label="Trực Tuyến"><input type="number" name="tructuyen_7" placeholder="Trực tuyến" oninput="calculateTyLe(7)"></td>
+          <td data-label="Tỷ Lệ (%)"><span id="tyle_7">0.00</span></td>
+          <td data-label="Đúng Hạn"><input type="number" name="dunghan_7" placeholder="Đúng hạn"></td>
+          <td data-label="Quá Hạn"><input type="number" name="quahan_7" placeholder="Quá hạn"></td>
+        </tr>
+        <tr>
+          <td data-label="STT">8</td>
+          <td data-label="Dịch Vụ"><select name="dichvu_8">
+            <option value="Đăng ký thương trú">Đăng ký thương trú</option>
+            <option value="Đăng ký tam trú">Đăng ký tam trú</option>
+            <option value="Khai báo tạm vắng">Khai báo tạm vắng</option>
+            <option value="Thông báo lưu trú">Thông báo lưu trú</option>
+            <option value="Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước">Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước</option>
+            <option value="Cấp lại, đổi thẻ Căn cước">Cấp lại, đổi thẻ Căn cước</option>
+            <option value="Đăng ký biển số môtô, xe gắn máy">Đăng ký biển số môtô, xe gắn máy</option>
+            <option value="Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)" selected>Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)</option>
+          </select></td>
+          <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_8" checked></td>
+          <td data-label="Tổng Số"><input type="number" name="tongso_8" placeholder="Tổng số" oninput="calculateTyLe(8)"></td>
+          <td data-label="Trực Tuyến"><input type="number" name="tructuyen_8" placeholder="Trực tuyến" oninput="calculateTyLe(8)"></td>
+          <td data-label="Tỷ Lệ (%)"><span id="tyle_8">0.00</span></td>
+          <td data-label="Đúng Hạn"><input type="number" name="dunghan_8" placeholder="Đúng hạn"></td>
+          <td data-label="Quá Hạn"><input type="number" name="quahan_8" placeholder="Quá hạn"></td>
+        </tr>
+      </tbody>
+    </table>
+    <button type="button" onclick="addServiceRow()">Thêm Dịch Vụ</button>
+    <button type="button" onclick="submitData()" id="submitBtn" disabled>Tạo Báo Cáo</button>
+  </form>
+  <div id="error-message" style="display:none;"></div>
+  <div id="report">
+    <h3>Báo Cáo Dữ Liệu</h3>
+    <table id="report-table">
+      <thead>
+        <tr>
+          <th>STT</th>
+          <th>Dịch Vụ</th>
+          <th>Kết Nối</th>
+          <th>Tổng Số</th>
+          <th>Trực Tuyến</th>
+          <th>Tỷ Lệ (%)</th>
+          <th>Đúng Hạn</th>
+          <th>Quá Hạn</th>
+        </tr>
+      </thead>
+      <tbody id="report-body"></tbody>
+    </table>
+  </div>
 
-            <label for="dichvu">Dịch Vụ:</label>
-            <input type="text" id="dichvu" name="dichvu" required>
+  <script>
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw4CNlAbFqi2aTHFHHVasgJCe6--IdAMXBPwPW7jpbWhwCFFQ2-rQXYBIsgI2W96tFg/exec';
+    let serviceCount = 8; // Bắt đầu từ 8 vì đã có 8 dịch vụ cố định
 
-            <label for="ketnoi">Kết Nối:</label>
-            <input type="text" id="ketnoi" name="ketnoi" value="Đã kết nối" required>
+    // Thêm hàng dịch vụ
+    function addServiceRow() {
+      serviceCount++;
+      const services = [
+        "Đăng ký thương trú",
+        "Đăng ký tam trú",
+        "Khai báo tạm vắng",
+        "Thông báo lưu trú",
+        "Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước",
+        "Cấp lại, đổi thẻ Căn cước",
+        "Đăng ký biển số môtô, xe gắn máy",
+        "Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)"
+      ];
+      const tbody = document.getElementById('services');
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td data-label="STT">${serviceCount}</td>
+        <td data-label="Dịch Vụ"><select name="dichvu_${serviceCount}">
+          ${services.map(service => `<option value="${service}">${service}</option>`).join('')}
+        </select></td>
+        <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_${serviceCount}" checked></td>
+        <td data-label="Tổng Số"><input type="number" name="tongso_${serviceCount}" placeholder="Tổng số" oninput="calculateTyLe(${serviceCount})"></td>
+        <td data-label="Trực Tuyến"><input type="number" name="tructuyen_${serviceCount}" placeholder="Trực tuyến" oninput="calculateTyLe(${serviceCount})"></td>
+        <td data-label="Tỷ Lệ (%)"><span id="tyle_${serviceCount}">0.00</span></td>
+        <td data-label="Đúng Hạn"><input type="number" name="dunghan_${serviceCount}" placeholder="Đúng hạn"></td>
+        <td data-label="Quá Hạn"><input type="number" name="quahan_${serviceCount}" placeholder="Quá hạn"></td>
+      `;
+      tbody.appendChild(row);
+      checkFormValidity();
+    }
 
-            <label for="tongso">Tổng Số:</label>
-            <input type="number" id="tongso" name="tongso" required>
+    // Hàm tính tỷ lệ (%) trên client-side
+    function calculateTyLe(index) {
+      const tongso = parseInt(document.querySelector(`input[name="tongso_${index}"]`).value) || 0;
+      const tructuyen = parseInt(document.querySelector(`input[name="tructuyen_${index}"]`).value) || 0;
+      const tyle = tongso > 0 ? ((tructuyen / tongso) * 100).toFixed(2) : 0;
+      document.getElementById(`tyle_${index}`).textContent = tyle;
+      checkFormValidity();
+    }
 
-            <label for="tructuyen">Trực Tuyến:</label>
-            <input type="number" id="tructuyen" name="tructuyen" required>
+    // Kiểm tra tính hợp lệ của form
+    function checkFormValidity() {
+      const tenCanBo = document.getElementById('tenCanBo').value;
+      const tenDonVi = document.getElementById('tenDonVi').value;
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = !(tenCanBo && tenDonVi);
+    }
 
-            <label for="tyle">Tỷ Lệ (%):</label>
-            <input type="number" id="tyle" name="tyle" required>
+    // Gửi dữ liệu
+    function submitData() {
+      const button = document.getElementById('submitBtn');
+      button.disabled = true;
+      const dataArray = [];
+      const tenCanBo = document.getElementById('tenCanBo').value;
+      const tenDonVi = document.getElementById('tenDonVi').value;
 
-            <label for="dunghan">Đúng Hạn:</label>
-            <input type="number" id="dunghan" name="dunghan" required>
+      const rows = document.getElementById('services').getElementsByTagName('tr');
+      for (let i = 1; i < rows.length; i++) { // Bỏ qua dòng đầu tiên (tên cán bộ và đơn vị)
+        const stt = i;
+        const dichvu = rows[i].querySelector(`select[name="dichvu_${stt}"]`).value;
+        const ketnoi = rows[i].querySelector(`input[name="ketnoi_${stt}"]`).checked ? 'Đã kết nối' : 'Chưa kết nối';
+        const tongso = parseInt(rows[i].querySelector(`input[name="tongso_${stt}"]`).value) || 0;
+        const tructuyen = parseInt(rows[i].querySelector(`input[name="tructuyen_${stt}"]`).value) || 0;
+        const tyle = parseFloat(document.getElementById(`tyle_${stt}`).textContent) || 0;
+        const dunghan = parseInt(rows[i].querySelector(`input[name="dunghan_${stt}"]`).value) || 0;
+        const quahan = parseInt(rows[i].querySelector(`input[name="quahan_${stt}"]`).value) || 0;
 
-            <label for="quahan">Quá Hạn:</label>
-            <input type="number" id="quahan" name="quahan" required>
-        </div>
-    </form>
-    <button type="button" onclick="addRow()">Thêm Dòng</button>
-    <button type="button" onclick="submitData()">Gửi Dữ Liệu</button>
+        const data = {
+          stt: stt,
+          tenCanBo: tenCanBo,
+          tenDonVi: tenDonVi,
+          dichvu: dichvu,
+          ketnoi: ketnoi,
+          tongso: tongso,
+          tructuyen: tructuyen,
+          tyle: tyle,
+          dunghan: dunghan,
+          quahan: quahan
+        };
+        dataArray.push(data);
+      }
 
-    <script>
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw4CNlAbFqi2aTHFHHVasgJCe6--IdAMXBPwPW7jpbWhwCFFQ2-rQXYBIsgI2W96tFg/exec';
+      console.log('Dữ liệu gửi đi:', JSON.stringify(dataArray));
 
-        function addRow() {
-            const newRow = document.createElement('div');
-            newRow.classList.add('data-row');
+      // Hiển thị báo cáo trên giao diện
+      generateReport(dataArray);
 
-            newRow.innerHTML = `
-                <label for="stt">STT:</label>
-                <input type="number" id="stt" name="stt" required>
-
-                <label for="dichvu">Dịch Vụ:</label>
-                <input type="text" id="dichvu" name="dichvu" required>
-
-                <label for="ketnoi">Kết Nối:</label>
-                <input type="text" id="ketnoi" name="ketnoi" value="Đã kết nối" required>
-
-                <label for="tongso">Tổng Số:</label>
-                <input type="number" id="tongso" name="tongso" required>
-
-                <label for="tructuyen">Trực Tuyến:</label>
-                <input type="number" id="tructuyen" name="tructuyen" required>
-
-                <label for="tyle">Tỷ Lệ (%):</label>
-                <input type="number" id="tyle" name="tyle" required>
-
-                <label for="dunghan">Đúng Hạn:</label>
-                <input type="number" id="dunghan" name="dunghan" required>
-
-                <label for="quahan">Quá Hạn:</label>
-                <input type="number" id="quahan" name="quahan" required>
-            `;
-
-            document.getElementById('dataForm').appendChild(newRow);
+      // Gửi dữ liệu lên Google Sheets
+      fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dataArray)
+      })
+      .then(response => response.text())
+      .then(result => {
+        if (result === "Success") {
+          alert('Dữ liệu đã được gửi! (Kiểm tra Google Sheets để xác nhận)');
+        } else {
+          throw new Error(result);
         }
+        button.disabled = false;
+      })
+      .catch(error => {
+        const errorMessage = document.getElementById('error-message');
+        errorMessage.textContent = 'Lỗi khi gửi dữ liệu: ' + error.message;
+        errorMessage.style.display = 'block';
+        button.disabled = false;
+      });
+    }
 
-        function submitData() {
-            const formData = new FormData(document.getElementById('dataForm'));
-            const user = formData.get('user');
-            const dataArray = [];
+    // Hiển thị báo cáo
+    function generateReport(dataArray) {
+      let html = '';
+      dataArray.forEach(row => {
+        html += `
+          <tr>
+            <td>${row.stt}</td>
+            <td>${row.dichvu}</td>
+            <td>${row.ketnoi}</td>
+            <td>${row.tongso}</td>
+            <td>${row.tructuyen}</td>
+            <td>${row.tyle}</td>
+            <td>${row.dunghan}</td>
+            <td>${row.quahan}</td>
+          </tr>
+        `;
+      });
+      document.getElementById('report-body').innerHTML = html;
+    }
 
-            document.querySelectorAll('.data-row').forEach(row => {
-                const dataObject = { user: user };
-                row.querySelectorAll('input').forEach(input => {
-                    dataObject[input.name] = input.value;
-                });
-                dataArray.push(dataObject);
-            });
-
-            fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(dataArray)
-            })
-            .then(response => response.text())
-            .then(data => console.log('Success:', data))
-            .catch((error) => console.error('Error:', error));
-        }
-    </script>
+    // Gắn sự kiện onchange cho các input để kiểm tra hợp lệ
+    document.getElementById('tenCanBo').addEventListener('input', checkFormValidity);
+    document.getElementById('tenDonVi').addEventListener('input', checkFormValidity);
+  </script>
 </body>
 </html>
