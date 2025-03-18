@@ -23,6 +23,26 @@
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+    .user-info {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .user-info label {
+      font-weight: bold;
+      color: #333;
+    }
+    .user-info input[type="text"] {
+      width: 200px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
     }
     table {
       width: 100%;
@@ -94,6 +114,10 @@
       background-color: #27ae60;
     }
     @media (max-width: 768px) {
+      .user-info {
+        position: static;
+        margin-bottom: 20px;
+      }
       table, th, td {
         display: block;
         width: 100%;
@@ -122,6 +146,12 @@
 <body>
   <h2>Báo Cáo Dịch Vụ Công</h2>
   <form id="report-form">
+    <div class="user-info">
+      <label for="tenCanBo">Tên cán bộ:</label>
+      <input type="text" id="tenCanBo" name="tenCanBo" required placeholder="Nhập tên cán bộ">
+      <label for="tenDonVi">Tên đơn vị:</label>
+      <input type="text" id="tenDonVi" name="tenDonVi" required placeholder="Nhập tên đơn vị">
+    </div>
     <table>
       <thead>
         <tr>
@@ -136,11 +166,6 @@
         </tr>
       </thead>
       <tbody id="services">
-        <tr>
-          <td data-label="STT"></td>
-          <td data-label="Tên cán bộ" colspan="3"><input type="text" id="tenCanBo" name="tenCanBo" required placeholder="Nhập tên cán bộ"></td>
-          <td data-label="Tên đơn vị" colspan="4"><input type="text" id="tenDonVi" name="tenDonVi" required placeholder="Nhập tên đơn vị"></td>
-        </tr>
         <tr>
           <td data-label="STT">1</td>
           <td data-label="Dịch Vụ"><select name="dichvu_1">
@@ -319,29 +344,17 @@
   </div>
 
   <script>
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw4CNlAbFqi2aTHFHHVasgJCe6--IdAMXBPwPW7jpbWhwCFFQ2-rQXYBIsgI2W96tFg/exec';
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwT_-7JSGF3xgO7Sle2ZWrLR9ProWOBQBhTeNRynTHOJsO3UBd5RfUm0EztFM7Lf1fDLw/exec';
     let serviceCount = 8; // Bắt đầu từ 8 vì đã có 8 dịch vụ cố định
 
-    // Thêm hàng dịch vụ
+    // Thêm hàng dịch vụ với ô nhập text cho Dịch Vụ
     function addServiceRow() {
       serviceCount++;
-      const services = [
-        "Đăng ký thương trú",
-        "Đăng ký tam trú",
-        "Khai báo tạm vắng",
-        "Thông báo lưu trú",
-        "Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước",
-        "Cấp lại, đổi thẻ Căn cước",
-        "Đăng ký biển số môtô, xe gắn máy",
-        "Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)"
-      ];
       const tbody = document.getElementById('services');
       const row = document.createElement('tr');
       row.innerHTML = `
         <td data-label="STT">${serviceCount}</td>
-        <td data-label="Dịch Vụ"><select name="dichvu_${serviceCount}">
-          ${services.map(service => `<option value="${service}">${service}</option>`).join('')}
-        </select></td>
+        <td data-label="Dịch Vụ"><input type="text" name="dichvu_${serviceCount}" placeholder="Nhập tên dịch vụ" required></td>
         <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_${serviceCount}" checked></td>
         <td data-label="Tổng Số"><input type="number" name="tongso_${serviceCount}" placeholder="Tổng số" oninput="calculateTyLe(${serviceCount})"></td>
         <td data-label="Trực Tuyến"><input type="number" name="tructuyen_${serviceCount}" placeholder="Trực tuyến" oninput="calculateTyLe(${serviceCount})"></td>
@@ -379,9 +392,15 @@
       const tenDonVi = document.getElementById('tenDonVi').value;
 
       const rows = document.getElementById('services').getElementsByTagName('tr');
-      for (let i = 1; i < rows.length; i++) { // Bỏ qua dòng đầu tiên (tên cán bộ và đơn vị)
-        const stt = i;
-        const dichvu = rows[i].querySelector(`select[name="dichvu_${stt}"]`).value;
+      for (let i = 0; i < rows.length; i++) {
+        const stt = i + 1;
+        const dichvuInput = rows[i].querySelector(`[name="dichvu_${stt}"]`);
+        const dichvu = dichvuInput.tagName === "SELECT" ? dichvuInput.value : dichvuInput.value.trim();
+        if (!dichvu) {
+          alert(`Vui lòng nhập tên dịch vụ tại dòng ${stt}`);
+          button.disabled = false;
+          return;
+        }
         const ketnoi = rows[i].querySelector(`input[name="ketnoi_${stt}"]`).checked ? 'Đã kết nối' : 'Chưa kết nối';
         const tongso = parseInt(rows[i].querySelector(`input[name="tongso_${stt}"]`).value) || 0;
         const tructuyen = parseInt(rows[i].querySelector(`input[name="tructuyen_${stt}"]`).value) || 0;
