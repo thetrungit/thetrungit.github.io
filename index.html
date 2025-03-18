@@ -25,13 +25,9 @@
     .user-info {
       float: right;
       display: flex;
-      flex-direction: column;
+      flex-direction: row; /* Sắp xếp theo chiều ngang */
       gap: 10px;
       margin-bottom: 20px;
-    }
-    .user-info label {
-      font-weight: bold;
-      color: #333;
     }
     .user-info input[type="text"] {
       width: 200px;
@@ -107,22 +103,13 @@
       color: red;
       margin-top: 10px;
     }
-    #report {
-      max-width: 1200px;
-      margin: 20px auto;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-    #report-table th {
-      background-color: #27ae60;
-    }
     @media (max-width: 768px) {
       .user-info {
         float: none;
         margin: 0 auto 20px;
         text-align: center;
+        flex-direction: column; /* Trên di động, chuyển về chiều dọc */
+        gap: 10px;
       }
       .user-info input[type="text"] {
         width: 100%;
@@ -155,11 +142,9 @@
 </head>
 <body>
   <div class="container">
-    <h2>Báo Cáo Dịch Vụ Công</h2>
+    <h2>BÁO CÁO 25 DỊCH VỤ CÔNG THIẾT YẾU</h2>
     <div class="user-info">
-      <label for="tenCanBo">Tên cán bộ:</label>
-      <input type="text" id="tenCanBo" name="tenCanBo" required placeholder="Nhập tên cán bộ">
-      <label for="tenDonVi">Tên đơn vị:</label>
+      <input type="text" id="tenCanBo" name="tenCanBo" required placeholder="Nhập Họ và tên cán bộ">
       <input type="text" id="tenDonVi" name="tenDonVi" required placeholder="Nhập tên đơn vị">
     </div>
     <form id="report-form">
@@ -335,24 +320,6 @@
       <button type="button" onclick="submitData()" id="submitBtn" disabled>Tạo Báo Cáo</button>
     </form>
     <div id="error-message" style="display:none;"></div>
-    <div id="report">
-      <h3>Báo Cáo Dữ Liệu</h3>
-      <table id="report-table">
-        <thead>
-          <tr>
-            <th>STT</th>
-            <th>Dịch Vụ</th>
-            <th>Kết Nối</th>
-            <th>Tổng Số</th>
-            <th>Trực Tuyến</th>
-            <th>Tỷ Lệ (%)</th>
-            <th>Đúng Hạn</th>
-            <th>Quá Hạn</th>
-          </tr>
-        </thead>
-        <tbody id="report-body"></tbody>
-      </table>
-    </div>
   </div>
 
   <script>
@@ -390,7 +357,9 @@
     // Kiểm tra tính hợp lệ của form
     function checkFormValidity() {
       const tenCanBo = document.getElementById('tenCanBo').value;
-      const tenDonVi = document.getElementById('tenDonVi').value;
+      const
+
+ tenDonVi = document.getElementById('tenDonVi').value;
       const submitBtn = document.getElementById('submitBtn');
       submitBtn.disabled = !(tenCanBo && tenDonVi);
     }
@@ -437,9 +406,6 @@
 
       console.log('Dữ liệu gửi đi:', JSON.stringify(dataArray));
 
-      // Hiển thị báo cáo trên giao diện
-      generateReport(dataArray);
-
       // Gửi dữ liệu lên Google Sheets
       fetch(GOOGLE_SCRIPT_URL, {
         method: 'POST',
@@ -461,26 +427,6 @@
         errorMessage.style.display = 'block';
         button.disabled = false;
       });
-    }
-
-    // Hiển thị báo cáo
-    function generateReport(dataArray) {
-      let html = '';
-      dataArray.forEach(row => {
-        html += `
-          <tr>
-            <td>${row.stt}</td>
-            <td>${row.dichvu}</td>
-            <td>${row.ketnoi}</td>
-            <td>${row.tongso}</td>
-            <td>${row.tructuyen}</td>
-            <td>${row.tyle}</td>
-            <td>${row.dunghan}</td>
-            <td>${row.quahan}</td>
-          </tr>
-        `;
-      });
-      document.getElementById('report-body').innerHTML = html;
     }
 
     // Gắn sự kiện onchange cho các input để kiểm tra hợp lệ
