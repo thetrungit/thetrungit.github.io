@@ -27,7 +27,7 @@
       display: flex;
       flex-direction: row;
       gap: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 5px; /* Giảm margin để thêm chú thích */
     }
     .user-info input[type="text"] {
       width: 200px;
@@ -35,6 +35,23 @@
       border: 1px solid #ccc;
       border-radius: 4px;
       box-sizing: border-box;
+      transition: border 0.3s; /* Hiệu ứng chuyển màu viền */
+    }
+    .user-info input[type="text"].highlight {
+      border: 2px solid #e74c3c; /* Viền đỏ khi chưa nhập */
+      animation: blink 1s infinite; /* Hiệu ứng nhấp nháy */
+    }
+    @keyframes blink {
+      0% { border-color: #e74c3c; }
+      50% { border-color: #f39c12; }
+      100% { border-color: #e74c3c; }
+    }
+    .info-note {
+      float: right;
+      clear: both;
+      font-size: 12px;
+      color: #e74c3c; /* Màu đỏ để nổi bật */
+      margin-bottom: 15px;
     }
     #report-form {
       max-width: 1200px;
@@ -83,8 +100,9 @@
       cursor: pointer;
       font-size: 16px;
       margin-right: 10px;
+      position: relative;
     }
-    button:hover {
+    button:hover:not(:disabled) {
       background-color: #34495e;
     }
     button:disabled {
@@ -99,7 +117,7 @@
     @media (max-width: 768px) {
       .user-info {
         float: none;
-        margin: 0 auto 20px;
+        margin: 0 auto 5px;
         text-align: center;
         flex-direction: column;
         gap: 10px;
@@ -107,6 +125,10 @@
       .user-info input[type="text"] {
         width: 100%;
         max-width: 300px;
+      }
+      .info-note {
+        float: none;
+        text-align: center;
       }
       table, th, td {
         display: block;
@@ -135,12 +157,12 @@
 </head>
 <body>
   <div class="container">
-    <h2>BÁO CÁO 25 DỊCH VỤ CÔNG THIẾT YẾU</h2>
+    <h2>TÌNH HÌNH TRIỂN KHAI 25 DỊCH VỤ CÔNG TRỰC TUYẾN THIẾT YẾU</h2>
     <div class="user-info">
       <input type="text" id="tenCanBo" name="tenCanBo" required placeholder="Nhập tên cán bộ">
       <input type="text" id="tenDonVi" name="tenDonVi" required placeholder="Nhập tên đơn vị">
-<h2>bắt buộc phải nhập hai thông tin này</h2>
     </div>
+    <p class="info-note">Vui lòng nhập Tên cán bộ và Tên đơn vị để tạo báo cáo.</p>
     <form id="report-form">
       <table>
         <thead>
@@ -239,7 +261,7 @@
         </tbody>
       </table>
       <button type="button" onclick="addServiceRow()">Thêm Dịch Vụ</button>
-      <button type="button" onclick="submitData()" id="submitBtn" disabled>Tạo Báo Cáo</button>
+      <button type="button" onclick="submitData()" id="submitBtn" disabled title="Vui lòng nhập Tên cán bộ và Tên đơn vị để tạo báo cáo">Tạo Báo Cáo</button>
     </form>
     <div id="error-message" style="display:none;"></div>
   </div>
@@ -276,12 +298,30 @@
       checkFormValidity();
     }
 
-    // Kiểm tra tính hợp lệ của form
+    // Kiểm tra tính hợp lệ của form và thêm hiệu ứng viền
     function checkFormValidity() {
-      const tenCanBo = document.getElementById('tenCanBo').value;
-      const tenDonVi = document.getElementById('tenDonVi').value;
+      const tenCanBo = document.getElementById('tenCanBo');
+      const tenDonVi = document.getElementById('tenDonVi');
       const submitBtn = document.getElementById('submitBtn');
-      submitBtn.disabled = !(tenCanBo && tenDonVi);
+      
+      const tenCanBoValue = tenCanBo.value.trim();
+      const tenDonViValue = tenDonVi.value.trim();
+
+      // Kiểm tra và thêm/xóa hiệu ứng viền
+      if (tenCanBoValue && !tenDonViValue) {
+        tenDonVi.classList.add('highlight');
+      } else {
+        tenDonVi.classList.remove('highlight');
+      }
+
+      if (tenDonViValue && !tenCanBoValue) {
+        tenCanBo.classList.add('highlight');
+      } else {
+        tenCanBo.classList.remove('highlight');
+      }
+
+      // Kích hoạt hoặc vô hiệu hóa nút
+      submitBtn.disabled = !(tenCanBoValue && tenDonViValue);
     }
 
     // Gửi dữ liệu
@@ -352,6 +392,9 @@
     // Gắn sự kiện onchange cho các input để kiểm tra hợp lệ
     document.getElementById('tenCanBo').addEventListener('input', checkFormValidity);
     document.getElementById('tenDonVi').addEventListener('input', checkFormValidity);
+
+    // Gọi lần đầu để kiểm tra trạng thái ban đầu
+    checkFormValidity();
   </script>
 </body>
 </html>
