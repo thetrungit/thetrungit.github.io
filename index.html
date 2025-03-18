@@ -14,24 +14,20 @@
     h2 {
       text-align: center;
       color: #333;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
+      position: relative;
     }
-    #report-form {
+    .container {
       max-width: 1200px;
       margin: 0 auto;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       position: relative;
     }
     .user-info {
-      position: absolute;
-      top: 20px;
-      right: 20px;
+      float: right;
       display: flex;
       flex-direction: column;
       gap: 10px;
+      margin-bottom: 20px;
     }
     .user-info label {
       font-weight: bold;
@@ -43,6 +39,15 @@
       border: 1px solid #ccc;
       border-radius: 4px;
       box-sizing: border-box;
+    }
+    #report-form {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      clear: both; /* Đảm bảo form nằm dưới user-info */
     }
     table {
       width: 100%;
@@ -115,8 +120,13 @@
     }
     @media (max-width: 768px) {
       .user-info {
-        position: static;
-        margin-bottom: 20px;
+        float: none;
+        margin: 0 auto 20px;
+        text-align: center;
+      }
+      .user-info input[type="text"] {
+        width: 100%;
+        max-width: 300px;
       }
       table, th, td {
         display: block;
@@ -144,203 +154,205 @@
   </style>
 </head>
 <body>
-  <h2>Báo Cáo Dịch Vụ Công</h2>
-  <form id="report-form">
+  <div class="container">
+    <h2>Báo Cáo Dịch Vụ Công</h2>
     <div class="user-info">
       <label for="tenCanBo">Tên cán bộ:</label>
       <input type="text" id="tenCanBo" name="tenCanBo" required placeholder="Nhập tên cán bộ">
       <label for="tenDonVi">Tên đơn vị:</label>
       <input type="text" id="tenDonVi" name="tenDonVi" required placeholder="Nhập tên đơn vị">
     </div>
-    <table>
-      <thead>
-        <tr>
-          <th>STT</th>
-          <th>Dịch Vụ</th>
-          <th>Kết Nối</th>
-          <th>Tổng Số</th>
-          <th>Trực Tuyến</th>
-          <th>Tỷ Lệ (%)</th>
-          <th>Đúng Hạn</th>
-          <th>Quá Hạn</th>
-        </tr>
-      </thead>
-      <tbody id="services">
-        <tr>
-          <td data-label="STT">1</td>
-          <td data-label="Dịch Vụ"><select name="dichvu_1">
-            <option value="Đăng ký thương trú" selected>Đăng ký thương trú</option>
-            <option value="Đăng ký tam trú">Đăng ký tam trú</option>
-            <option value="Khai báo tạm vắng">Khai báo tạm vắng</option>
-            <option value="Thông báo lưu trú">Thông báo lưu trú</option>
-            <option value="Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước">Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước</option>
-            <option value="Cấp lại, đổi thẻ Căn cước">Cấp lại, đổi thẻ Căn cước</option>
-            <option value="Đăng ký biển số môtô, xe gắn máy">Đăng ký biển số môtô, xe gắn máy</option>
-            <option value="Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)">Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)</option>
-          </select></td>
-          <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_1" checked></td>
-          <td data-label="Tổng Số"><input type="number" name="tongso_1" placeholder="Tổng số" oninput="calculateTyLe(1)"></td>
-          <td data-label="Trực Tuyến"><input type="number" name="tructuyen_1" placeholder="Trực tuyến" oninput="calculateTyLe(1)"></td>
-          <td data-label="Tỷ Lệ (%)"><span id="tyle_1">0.00</span></td>
-          <td data-label="Đúng Hạn"><input type="number" name="dunghan_1" placeholder="Đúng hạn"></td>
-          <td data-label="Quá Hạn"><input type="number" name="quahan_1" placeholder="Quá hạn"></td>
-        </tr>
-        <tr>
-          <td data-label="STT">2</td>
-          <td data-label="Dịch Vụ"><select name="dichvu_2">
-            <option value="Đăng ký thương trú">Đăng ký thương trú</option>
-            <option value="Đăng ký tam trú" selected>Đăng ký tam trú</option>
-            <option value="Khai báo tạm vắng">Khai báo tạm vắng</option>
-            <option value="Thông báo lưu trú">Thông báo lưu trú</option>
-            <option value="Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước">Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước</option>
-            <option value="Cấp lại, đổi thẻ Căn cước">Cấp lại, đổi thẻ Căn cước</option>
-            <option value="Đăng ký biển số môtô, xe gắn máy">Đăng ký biển số môtô, xe gắn máy</option>
-            <option value="Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)">Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)</option>
-          </select></td>
-          <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_2" checked></td>
-          <td data-label="Tổng Số"><input type="number" name="tongso_2" placeholder="Tổng số" oninput="calculateTyLe(2)"></td>
-          <td data-label="Trực Tuyến"><input type="number" name="tructuyen_2" placeholder="Trực tuyến" oninput="calculateTyLe(2)"></td>
-          <td data-label="Tỷ Lệ (%)"><span id="tyle_2">0.00</span></td>
-          <td data-label="Đúng Hạn"><input type="number" name="dunghan_2" placeholder="Đúng hạn"></td>
-          <td data-label="Quá Hạn"><input type="number" name="quahan_2" placeholder="Quá hạn"></td>
-        </tr>
-        <tr>
-          <td data-label="STT">3</td>
-          <td data-label="Dịch Vụ"><select name="dichvu_3">
-            <option value="Đăng ký thương trú">Đăng ký thương trú</option>
-            <option value="Đăng ký tam trú">Đăng ký tam trú</option>
-            <option value="Khai báo tạm vắng" selected>Khai báo tạm vắng</option>
-            <option value="Thông báo lưu trú">Thông báo lưu trú</option>
-            <option value="Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước">Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước</option>
-            <option value="Cấp lại, đổi thẻ Căn cước">Cấp lại, đổi thẻ Căn cước</option>
-            <option value="Đăng ký biển số môtô, xe gắn máy">Đăng ký biển số môtô, xe gắn máy</option>
-            <option value="Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)">Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)</option>
-          </select></td>
-          <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_3" checked></td>
-          <td data-label="Tổng Số"><input type="number" name="tongso_3" placeholder="Tổng số" oninput="calculateTyLe(3)"></td>
-          <td data-label="Trực Tuyến"><input type="number" name="tructuyen_3" placeholder="Trực tuyến" oninput="calculateTyLe(3)"></td>
-          <td data-label="Tỷ Lệ (%)"><span id="tyle_3">0.00</span></td>
-          <td data-label="Đúng Hạn"><input type="number" name="dunghan_3" placeholder="Đúng hạn"></td>
-          <td data-label="Quá Hạn"><input type="number" name="quahan_3" placeholder="Quá hạn"></td>
-        </tr>
-        <tr>
-          <td data-label="STT">4</td>
-          <td data-label="Dịch Vụ"><select name="dichvu_4">
-            <option value="Đăng ký thương trú">Đăng ký thương trú</option>
-            <option value="Đăng ký tam trú">Đăng ký tam trú</option>
-            <option value="Khai báo tạm vắng">Khai báo tạm vắng</option>
-            <option value="Thông báo lưu trú" selected>Thông báo lưu trú</option>
-            <option value="Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước">Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước</option>
-            <option value="Cấp lại, đổi thẻ Căn cước">Cấp lại, đổi thẻ Căn cước</option>
-            <option value="Đăng ký biển số môtô, xe gắn máy">Đăng ký biển số môtô, xe gắn máy</option>
-            <option value="Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)">Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)</option>
-          </select></td>
-          <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_4" checked></td>
-          <td data-label="Tổng Số"><input type="number" name="tongso_4" placeholder="Tổng số" oninput="calculateTyLe(4)"></td>
-          <td data-label="Trực Tuyến"><input type="number" name="tructuyen_4" placeholder="Trực tuyến" oninput="calculateTyLe(4)"></td>
-          <td data-label="Tỷ Lệ (%)"><span id="tyle_4">0.00</span></td>
-          <td data-label="Đúng Hạn"><input type="number" name="dunghan_4" placeholder="Đúng hạn"></td>
-          <td data-label="Quá Hạn"><input type="number" name="quahan_4" placeholder="Quá hạn"></td>
-        </tr>
-        <tr>
-          <td data-label="STT">5</td>
-          <td data-label="Dịch Vụ"><select name="dichvu_5">
-            <option value="Đăng ký thương trú">Đăng ký thương trú</option>
-            <option value="Đăng ký tam trú">Đăng ký tam trú</option>
-            <option value="Khai báo tạm vắng">Khai báo tạm vắng</option>
-            <option value="Thông báo lưu trú">Thông báo lưu trú</option>
-            <option value="Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước" selected>Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước</option>
-            <option value="Cấp lại, đổi thẻ Căn cước">Cấp lại, đổi thẻ Căn cước</option>
-            <option value="Đăng ký biển số môtô, xe gắn máy">Đăng ký biển số môtô, xe gắn máy</option>
-            <option value="Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)">Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)</option>
-          </select></td>
-          <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_5" checked></td>
-          <td data-label="Tổng Số"><input type="number" name="tongso_5" placeholder="Tổng số" oninput="calculateTyLe(5)"></td>
-          <td data-label="Trực Tuyến"><input type="number" name="tructuyen_5" placeholder="Trực tuyến" oninput="calculateTyLe(5)"></td>
-          <td data-label="Tỷ Lệ (%)"><span id="tyle_5">0.00</span></td>
-          <td data-label="Đúng Hạn"><input type="number" name="dunghan_5" placeholder="Đúng hạn"></td>
-          <td data-label="Quá Hạn"><input type="number" name="quahan_5" placeholder="Quá hạn"></td>
-        </tr>
-        <tr>
-          <td data-label="STT">6</td>
-          <td data-label="Dịch Vụ"><select name="dichvu_6">
-            <option value="Đăng ký thương trú">Đăng ký thương trú</option>
-            <option value="Đăng ký tam trú">Đăng ký tam trú</option>
-            <option value="Khai báo tạm vắng">Khai báo tạm vắng</option>
-            <option value="Thông báo lưu trú">Thông báo lưu trú</option>
-            <option value="Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước">Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước</option>
-            <option value="Cấp lại, đổi thẻ Căn cước" selected>Cấp lại, đổi thẻ Căn cước</option>
-            <option value="Đăng ký biển số môtô, xe gắn máy">Đăng ký biển số môtô, xe gắn máy</option>
-            <option value="Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)">Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)</option>
-          </select></td>
-          <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_6" checked></td>
-          <td data-label="Tổng Số"><input type="number" name="tongso_6" placeholder="Tổng số" oninput="calculateTyLe(6)"></td>
-          <td data-label="Trực Tuyến"><input type="number" name="tructuyen_6" placeholder="Trực tuyến" oninput="calculateTyLe(6)"></td>
-          <td data-label="Tỷ Lệ (%)"><span id="tyle_6">0.00</span></td>
-          <td data-label="Đúng Hạn"><input type="number" name="dunghan_6" placeholder="Đúng hạn"></td>
-          <td data-label="Quá Hạn"><input type="number" name="quahan_6" placeholder="Quá hạn"></td>
-        </tr>
-        <tr>
-          <td data-label="STT">7</td>
-          <td data-label="Dịch Vụ"><select name="dichvu_7">
-            <option value="Đăng ký thương trú">Đăng ký thương trú</option>
-            <option value="Đăng ký tam trú">Đăng ký tam trú</option>
-            <option value="Khai báo tạm vắng">Khai báo tạm vắng</option>
-            <option value="Thông báo lưu trú">Thông báo lưu trú</option>
-            <option value="Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước">Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước</option>
-            <option value="Cấp lại, đổi thẻ Căn cước">Cấp lại, đổi thẻ Căn cước</option>
-            <option value="Đăng ký biển số môtô, xe gắn máy" selected>Đăng ký biển số môtô, xe gắn máy</option>
-            <option value="Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)">Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)</option>
-          </select></td>
-          <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_7" checked></td>
-          <td data-label="Tổng Số"><input type="number" name="tongso_7" placeholder="Tổng số" oninput="calculateTyLe(7)"></td>
-          <td data-label="Trực Tuyến"><input type="number" name="tructuyen_7" placeholder="Trực tuyến" oninput="calculateTyLe(7)"></td>
-          <td data-label="Tỷ Lệ (%)"><span id="tyle_7">0.00</span></td>
-          <td data-label="Đúng Hạn"><input type="number" name="dunghan_7" placeholder="Đúng hạn"></td>
-          <td data-label="Quá Hạn"><input type="number" name="quahan_7" placeholder="Quá hạn"></td>
-        </tr>
-        <tr>
-          <td data-label="STT">8</td>
-          <td data-label="Dịch Vụ"><select name="dichvu_8">
-            <option value="Đăng ký thương trú">Đăng ký thương trú</option>
-            <option value="Đăng ký tam trú">Đăng ký tam trú</option>
-            <option value="Khai báo tạm vắng">Khai báo tạm vắng</option>
-            <option value="Thông báo lưu trú">Thông báo lưu trú</option>
-            <option value="Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước">Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước</option>
-            <option value="Cấp lại, đổi thẻ Căn cước">Cấp lại, đổi thẻ Căn cước</option>
-            <option value="Đăng ký biển số môtô, xe gắn máy">Đăng ký biển số môtô, xe gắn máy</option>
-            <option value="Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)" selected>Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)</option>
-          </select></td>
-          <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_8" checked></td>
-          <td data-label="Tổng Số"><input type="number" name="tongso_8" placeholder="Tổng số" oninput="calculateTyLe(8)"></td>
-          <td data-label="Trực Tuyến"><input type="number" name="tructuyen_8" placeholder="Trực tuyến" oninput="calculateTyLe(8)"></td>
-          <td data-label="Tỷ Lệ (%)"><span id="tyle_8">0.00</span></td>
-          <td data-label="Đúng Hạn"><input type="number" name="dunghan_8" placeholder="Đúng hạn"></td>
-          <td data-label="Quá Hạn"><input type="number" name="quahan_8" placeholder="Quá hạn"></td>
-        </tr>
-      </tbody>
-    </table>
-    <button type="button" onclick="addServiceRow()">Thêm Dịch Vụ</button>
-    <button type="button" onclick="submitData()" id="submitBtn" disabled>Tạo Báo Cáo</button>
-  </form>
-  <div id="error-message" style="display:none;"></div>
-  <div id="report">
-    <h3>Báo Cáo Dữ Liệu</h3>
-    <table id="report-table">
-      <thead>
-        <tr>
-          <th>STT</th>
-          <th>Dịch Vụ</th>
-          <th>Kết Nối</th>
-          <th>Tổng Số</th>
-          <th>Trực Tuyến</th>
-          <th>Tỷ Lệ (%)</th>
-          <th>Đúng Hạn</th>
-          <th>Quá Hạn</th>
-        </tr>
-      </thead>
-      <tbody id="report-body"></tbody>
-    </table>
+    <form id="report-form">
+      <table>
+        <thead>
+          <tr>
+            <th>STT</th>
+            <th>Dịch Vụ</th>
+            <th>Kết Nối</th>
+            <th>Tổng Số</th>
+            <th>Trực Tuyến</th>
+            <th>Tỷ Lệ (%)</th>
+            <th>Đúng Hạn</th>
+            <th>Quá Hạn</th>
+          </tr>
+        </thead>
+        <tbody id="services">
+          <tr>
+            <td data-label="STT">1</td>
+            <td data-label="Dịch Vụ"><select name="dichvu_1">
+              <option value="Đăng ký thương trú" selected>Đăng ký thương trú</option>
+              <option value="Đăng ký tam trú">Đăng ký tam trú</option>
+              <option value="Khai báo tạm vắng">Khai báo tạm vắng</option>
+              <option value="Thông báo lưu trú">Thông báo lưu trú</option>
+              <option value="Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước">Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước</option>
+              <option value="Cấp lại, đổi thẻ Căn cước">Cấp lại, đổi thẻ Căn cước</option>
+              <option value="Đăng ký biển số môtô, xe gắn máy">Đăng ký biển số môtô, xe gắn máy</option>
+              <option value="Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)">Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)</option>
+            </select></td>
+            <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_1" checked></td>
+            <td data-label="Tổng Số"><input type="number" name="tongso_1" placeholder="Tổng số" oninput="calculateTyLe(1)"></td>
+            <td data-label="Trực Tuyến"><input type="number" name="tructuyen_1" placeholder="Trực tuyến" oninput="calculateTyLe(1)"></td>
+            <td data-label="Tỷ Lệ (%)"><span id="tyle_1">0.00</span></td>
+            <td data-label="Đúng Hạn"><input type="number" name="dunghan_1" placeholder="Đúng hạn"></td>
+            <td data-label="Quá Hạn"><input type="number" name="quahan_1" placeholder="Quá hạn"></td>
+          </tr>
+          <tr>
+            <td data-label="STT">2</td>
+            <td data-label="Dịch Vụ"><select name="dichvu_2">
+              <option value="Đăng ký thương trú">Đăng ký thương trú</option>
+              <option value="Đăng ký tam trú" selected>Đăng ký tam trú</option>
+              <option value="Khai báo tạm vắng">Khai báo tạm vắng</option>
+              <option value="Thông báo lưu trú">Thông báo lưu trú</option>
+              <option value="Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước">Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước</option>
+              <option value="Cấp lại, đổi thẻ Căn cước">Cấp lại, đổi thẻ Căn cước</option>
+              <option value="Đăng ký biển số môtô, xe gắn máy">Đăng ký biển số môtô, xe gắn máy</option>
+              <option value="Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)">Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)</option>
+            </select></td>
+            <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_2" checked></td>
+            <td data-label="Tổng Số"><input type="number" name="tongso_2" placeholder="Tổng số" oninput="calculateTyLe(2)"></td>
+            <td data-label="Trực Tuyến"><input type="number" name="tructuyen_2" placeholder="Trực tuyến" oninput="calculateTyLe(2)"></td>
+            <td data-label="Tỷ Lệ (%)"><span id="tyle_2">0.00</span></td>
+            <td data-label="Đúng Hạn"><input type="number" name="dunghan_2" placeholder="Đúng hạn"></td>
+            <td data-label="Quá Hạn"><input type="number" name="quahan_2" placeholder="Quá hạn"></td>
+          </tr>
+          <tr>
+            <td data-label="STT">3</td>
+            <td data-label="Dịch Vụ"><select name="dichvu_3">
+              <option value="Đăng ký thương trú">Đăng ký thương trú</option>
+              <option value="Đăng ký tam trú">Đăng ký tam trú</option>
+              <option value="Khai báo tạm vắng" selected>Khai báo tạm vắng</option>
+              <option value="Thông báo lưu trú">Thông báo lưu trú</option>
+              <option value="Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước">Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước</option>
+              <option value="Cấp lại, đổi thẻ Căn cước">Cấp lại, đổi thẻ Căn cước</option>
+              <option value="Đăng ký biển số môtô, xe gắn máy">Đăng ký biển số môtô, xe gắn máy</option>
+              <option value="Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)">Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)</option>
+            </select></td>
+            <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_3" checked></td>
+            <td data-label="Tổng Số"><input type="number" name="tongso_3" placeholder="Tổng số" oninput="calculateTyLe(3)"></td>
+            <td data-label="Trực Tuyến"><input type="number" name="tructuyen_3" placeholder="Trực tuyến" oninput="calculateTyLe(3)"></td>
+            <td data-label="Tỷ Lệ (%)"><span id="tyle_3">0.00</span></td>
+            <td data-label="Đúng Hạn"><input type="number" name="dunghan_3" placeholder="Đúng hạn"></td>
+            <td data-label="Quá Hạn"><input type="number" name="quahan_3" placeholder="Quá hạn"></td>
+          </tr>
+          <tr>
+            <td data-label="STT">4</td>
+            <td data-label="Dịch Vụ"><select name="dichvu_4">
+              <option value="Đăng ký thương trú">Đăng ký thương trú</option>
+              <option value="Đăng ký tam trú">Đăng ký tam trú</option>
+              <option value="Khai báo tạm vắng">Khai báo tạm vắng</option>
+              <option value="Thông báo lưu trú" selected>Thông báo lưu trú</option>
+              <option value="Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước">Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước</option>
+              <option value="Cấp lại, đổi thẻ Căn cước">Cấp lại, đổi thẻ Căn cước</option>
+              <option value="Đăng ký biển số môtô, xe gắn máy">Đăng ký biển số môtô, xe gắn máy</option>
+              <option value="Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)">Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)</option>
+            </select></td>
+            <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_4" checked></td>
+            <td data-label="Tổng Số"><input type="number" name="tongso_4" placeholder="Tổng số" oninput="calculateTyLe(4)"></td>
+            <td data-label="Trực Tuyến"><input type="number" name="tructuyen_4" placeholder="Trực tuyến" oninput="calculateTyLe(4)"></td>
+            <td data-label="Tỷ Lệ (%)"><span id="tyle_4">0.00</span></td>
+            <td data-label="Đúng Hạn"><input type="number" name="dunghan_4" placeholder="Đúng hạn"></td>
+            <td data-label="Quá Hạn"><input type="number" name="quahan_4" placeholder="Quá hạn"></td>
+          </tr>
+          <tr>
+            <td data-label="STT">5</td>
+            <td data-label="Dịch Vụ"><select name="dichvu_5">
+              <option value="Đăng ký thương trú">Đăng ký thương trú</option>
+              <option value="Đăng ký tam trú">Đăng ký tam trú</option>
+              <option value="Khai báo tạm vắng">Khai báo tạm vắng</option>
+              <option value="Thông báo lưu trú">Thông báo lưu trú</option>
+              <option value="Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước" selected>Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước</option>
+              <option value="Cấp lại, đổi thẻ Căn cước">Cấp lại, đổi thẻ Căn cước</option>
+              <option value="Đăng ký biển số môtô, xe gắn máy">Đăng ký biển số môtô, xe gắn máy</option>
+              <option value="Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)">Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)</option>
+            </select></td>
+            <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_5" checked></td>
+            <td data-label="Tổng Số"><input type="number" name="tongso_5" placeholder="Tổng số" oninput="calculateTyLe(5)"></td>
+            <td data-label="Trực Tuyến"><input type="number" name="tructuyen_5" placeholder="Trực tuyến" oninput="calculateTyLe(5)"></td>
+            <td data-label="Tỷ Lệ (%)"><span id="tyle_5">0.00</span></td>
+            <td data-label="Đúng Hạn"><input type="number" name="dunghan_5" placeholder="Đúng hạn"></td>
+            <td data-label="Quá Hạn"><input type="number" name="quahan_5" placeholder="Quá hạn"></td>
+          </tr>
+          <tr>
+            <td data-label="STT">6</td>
+            <td data-label="Dịch Vụ"><select name="dichvu_6">
+              <option value="Đăng ký thương trú">Đăng ký thương trú</option>
+              <option value="Đăng ký tam trú">Đăng ký tam trú</option>
+              <option value="Khai báo tạm vắng">Khai báo tạm vắng</option>
+              <option value="Thông báo lưu trú">Thông báo lưu trú</option>
+              <option value="Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước">Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước</option>
+              <option value="Cấp lại, đổi thẻ Căn cước" selected>Cấp lại, đổi thẻ Căn cước</option>
+              <option value="Đăng ký biển số môtô, xe gắn máy">Đăng ký biển số môtô, xe gắn máy</option>
+              <option value="Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)">Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)</option>
+            </select></td>
+            <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_6" checked></td>
+            <td data-label="Tổng Số"><input type="number" name="tongso_6" placeholder="Tổng số" oninput="calculateTyLe(6)"></td>
+            <td data-label="Trực Tuyến"><input type="number" name="tructuyen_6" placeholder="Trực tuyến" oninput="calculateTyLe(6)"></td>
+            <td data-label="Tỷ Lệ (%)"><span id="tyle_6">0.00</span></td>
+            <td data-label="Đúng Hạn"><input type="number" name="dunghan_6" placeholder="Đúng hạn"></td>
+            <td data-label="Quá Hạn"><input type="number" name="quahan_6" placeholder="Quá hạn"></td>
+          </tr>
+          <tr>
+            <td data-label="STT">7</td>
+            <td data-label="Dịch Vụ"><select name="dichvu_7">
+              <option value="Đăng ký thương trú">Đăng ký thương trú</option>
+              <option value="Đăng ký tam trú">Đăng ký tam trú</option>
+              <option value="Khai báo tạm vắng">Khai báo tạm vắng</option>
+              <option value="Thông báo lưu trú">Thông báo lưu trú</option>
+              <option value="Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước">Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước</option>
+              <option value="Cấp lại, đổi thẻ Căn cước">Cấp lại, đổi thẻ Căn cước</option>
+              <option value="Đăng ký biển số môtô, xe gắn máy" selected>Đăng ký biển số môtô, xe gắn máy</option>
+              <option value="Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)">Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)</option>
+            </select></td>
+            <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_7" checked></td>
+            <td data-label="Tổng Số"><input type="number" name="tongso_7" placeholder="Tổng số" oninput="calculateTyLe(7)"></td>
+            <td data-label="Trực Tuyến"><input type="number" name="tructuyen_7" placeholder="Trực tuyến" oninput="calculateTyLe(7)"></td>
+            <td data-label="Tỷ Lệ (%)"><span id="tyle_7">0.00</span></td>
+            <td data-label="Đúng Hạn"><input type="number" name="dunghan_7" placeholder="Đúng hạn"></td>
+            <td data-label="Quá Hạn"><input type="number" name="quahan_7" placeholder="Quá hạn"></td>
+          </tr>
+          <tr>
+            <td data-label="STT">8</td>
+            <td data-label="Dịch Vụ"><select name="dichvu_8">
+              <option value="Đăng ký thương trú">Đăng ký thương trú</option>
+              <option value="Đăng ký tam trú">Đăng ký tam trú</option>
+              <option value="Khai báo tạm vắng">Khai báo tạm vắng</option>
+              <option value="Thông báo lưu trú">Thông báo lưu trú</option>
+              <option value="Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước">Xác nhận số Chứng minh nhân dân khi đã được cấp thẻ Căn cước</option>
+              <option value="Cấp lại, đổi thẻ Căn cước">Cấp lại, đổi thẻ Căn cước</option>
+              <option value="Đăng ký biển số môtô, xe gắn máy">Đăng ký biển số môtô, xe gắn máy</option>
+              <option value="Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)" selected>Thu tiền nộp phạt xử lý vi phạm hành chính trong lĩnh vực giao thông, duyệt bỏ qua thuật bị ghi hình (Phạt nguội)</option>
+            </select></td>
+            <td data-label="Kết Nối"><input type="checkbox" name="ketnoi_8" checked></td>
+            <td data-label="Tổng Số"><input type="number" name="tongso_8" placeholder="Tổng số" oninput="calculateTyLe(8)"></td>
+            <td data-label="Trực Tuyến"><input type="number" name="tructuyen_8" placeholder="Trực tuyến" oninput="calculateTyLe(8)"></td>
+            <td data-label="Tỷ Lệ (%)"><span id="tyle_8">0.00</span></td>
+            <td data-label="Đúng Hạn"><input type="number" name="dunghan_8" placeholder="Đúng hạn"></td>
+            <td data-label="Quá Hạn"><input type="number" name="quahan_8" placeholder="Quá hạn"></td>
+          </tr>
+        </tbody>
+      </table>
+      <button type="button" onclick="addServiceRow()">Thêm Dịch Vụ</button>
+      <button type="button" onclick="submitData()" id="submitBtn" disabled>Tạo Báo Cáo</button>
+    </form>
+    <div id="error-message" style="display:none;"></div>
+    <div id="report">
+      <h3>Báo Cáo Dữ Liệu</h3>
+      <table id="report-table">
+        <thead>
+          <tr>
+            <th>STT</th>
+            <th>Dịch Vụ</th>
+            <th>Kết Nối</th>
+            <th>Tổng Số</th>
+            <th>Trực Tuyến</th>
+            <th>Tỷ Lệ (%)</th>
+            <th>Đúng Hạn</th>
+            <th>Quá Hạn</th>
+          </tr>
+        </thead>
+        <tbody id="report-body"></tbody>
+      </table>
+    </div>
   </div>
 
   <script>
